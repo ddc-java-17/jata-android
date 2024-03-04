@@ -36,12 +36,12 @@
 
   <fragment
     android:id="@+id/navigation_sign_in_demo"
-    android:name="edu.cnm.deepdive.appstarter.controller.DemoFragment"
+    android:name="edu.cnm.deepdive.jata.controller.DemoFragment"
     tools:layout="@layout/fragment_demo"/>
 
   <dialog
     android:id="@+id/navigation_permissions_explanation"
-    android:name="edu.cnm.deepdive.appstarter.controller.PermissionsExplanationFragment">
+    android:name="edu.cnm.deepdive.jata.controller.PermissionsExplanationFragment">
 
     <argument
       android:name="permissions_to_explain"
