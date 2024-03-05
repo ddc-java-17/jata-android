@@ -5,6 +5,7 @@ java="17"
 kotlin="1.9.22"
 
 # Core Android plugin and library versions
+#noinspection GradleDependency
 android-gradle = "8.2.2"
 app-compat = "1.6.1"
 lifecycle = "2.7.0"
@@ -19,7 +20,8 @@ room = "2.6.1"
 hilt = "2.50"
 material = "1.11.0"
 gson = "2.10.1"
-play-services-auth = "21.0.0"
+#noinspection GradleDependency
+play-services-auth = "20.7.0"
 
 # Third-party plugin and library versions
 retrofit = "2.9.0"
