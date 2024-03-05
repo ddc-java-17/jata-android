@@ -117,6 +117,7 @@
       android:editable="false"
       android:textIsSelectable="true"
       android:hint="@string/bearer_token_hint"
+      android:maxLines="4"
       style="@style/TextAppearance.Material3.BodyLarge"
       tools:ignore="Deprecated"/>
 
