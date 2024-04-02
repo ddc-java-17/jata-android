@@ -42,6 +42,7 @@ import javax.inject.Inject;
 @HiltViewModel
 public class LoginViewModel extends ViewModel implements DefaultLifecycleObserver {
 
+  private static final String TAG = LoginViewModel.class.getSimpleName();
   private final GoogleSignInService signInService;
   private final MutableLiveData<GoogleSignInAccount> account;
   private final MutableLiveData<Throwable> throwable;
@@ -92,7 +93,10 @@ public class LoginViewModel extends ViewModel implements DefaultLifecycleObserve
     signInService
         .refresh()
         .subscribe(
-            account::postValue,
+            account -> {
+              this.account.postValue(account);
+              Log.d(TAG, "Bearer " + account.getIdToken());
+            },
             (throwable) -> account.postValue(null),
             pending
         );
@@ -138,7 +142,8 @@ public class LoginViewModel extends ViewModel implements DefaultLifecycleObserve
         .signOut()
         .doFinally(() -> account.postValue(null))
         .subscribe(
-            () -> {},
+            () -> {
+            },
             this::postThrowable,
             pending
         );
@@ -151,7 +156,7 @@ public class LoginViewModel extends ViewModel implements DefaultLifecycleObserve
   }
 
   private void postThrowable(Throwable throwable) {
-    Log.e(getClass().getSimpleName(), throwable.getMessage(), throwable);
+    Log.e(TAG, throwable.getMessage(), throwable);
     this.throwable.postValue(throwable);
   }
 
