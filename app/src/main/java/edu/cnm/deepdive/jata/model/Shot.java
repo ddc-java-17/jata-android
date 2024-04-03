@@ -10,5 +10,7 @@ public class Shot {
   private final String id;
 
 
-
+  public Shot(String id) {
+    this.id = id;
+  }
 }

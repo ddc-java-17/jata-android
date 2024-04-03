@@ -23,8 +23,10 @@ public class Game {
   @Expose(serialize = false, deserialize = true)
   private final Date start;
 
-  public Game(String id, List<Ship> ships, Date start) {
+  public Game(String id, int boardSize, int numPlayers, List<Ship> ships, Date start) {
     this.id = id;
+    this.boardSize = boardSize;
+    this.numPlayers = numPlayers;
     this.ships = ships;
     this.start = start;
   }
