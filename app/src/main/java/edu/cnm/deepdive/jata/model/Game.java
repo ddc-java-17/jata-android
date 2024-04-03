@@ -12,22 +12,20 @@ public class Game {
   @Expose(serialize = false, deserialize = true)
   private final String id;
 
+  @Expose
   private final int boardSize;
 
   @Expose
-  private final int numPlayers;
-  @Expose()
-  private final List<Ship> ships;
+  private final int playerCount;
 
-  @SerializedName("created")
-  @Expose(serialize = false, deserialize = true)
-  private final Date start;
+  // UserGame -> Board magic
 
-  public Game(String id, int boardSize, int numPlayers, List<Ship> ships, Date start) {
+
+
+
+  public Game(String id, int boardSize, int playerCount, List<Ship> ships, Date start) {
     this.id = id;
     this.boardSize = boardSize;
-    this.numPlayers = numPlayers;
-    this.ships = ships;
-    this.start = start;
+    this.playerCount = playerCount;
   }
 }
