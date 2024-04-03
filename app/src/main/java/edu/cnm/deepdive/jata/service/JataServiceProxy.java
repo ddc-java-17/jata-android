@@ -24,9 +24,9 @@ public interface JataServiceProxy {
       @Body Game game,
       @Header("Authorization") String bearerToken);
 
-  @GET("games/{id}")
+  @GET("games/{gameKey}")
   Single<Game> getGame(
-      @Path("id") String id,
+      @Path("gameKey") String key,
       @Header("Authorization") String bearerToken);
 
   // SHIP
