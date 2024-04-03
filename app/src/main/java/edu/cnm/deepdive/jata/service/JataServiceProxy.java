@@ -19,13 +19,14 @@ public interface JataServiceProxy {
 
   @POST("games")
   Single<Game> startGame(
-      @Body int boardSize,
+      @Body Game game,
       @Header("Authorization") String bearerToken);
 
   @GET("games/{id}")
   Single<Game> getGame(
       @Path("id") String id,
       @Header("Authorization") String bearerToken);
+
 
   // TODO: 4/3/2024 users/me endpoint working first.
 

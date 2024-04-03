@@ -12,6 +12,7 @@ public class Game {
   @Expose(serialize = false, deserialize = true)
   private final String id;
 
+  @Expose
   private final int boardSize;
 
   @Expose
