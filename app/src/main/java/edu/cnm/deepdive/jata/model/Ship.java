@@ -16,7 +16,7 @@ public class Ship {
   private int shipCoordX;
 
   @Expose
-  private int shiCoordY;
+  private int shipCoordY;
 
   @Expose
   private int length;
@@ -53,7 +53,7 @@ public class Ship {
    * @return
    */
   public int getShiCoordY() {
-    return shiCoordY;
+    return shipCoordY;
   }
 
   /**
@@ -61,7 +61,7 @@ public class Ship {
    * @param shiCoordY
    */
   public void setShiCoordY(int shiCoordY) {
-    this.shiCoordY = shiCoordY;
+    this.shipCoordY = shiCoordY;
   }
 
   /**

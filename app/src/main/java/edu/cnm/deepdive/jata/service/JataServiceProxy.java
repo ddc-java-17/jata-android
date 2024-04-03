@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.jata.service;
 
 import edu.cnm.deepdive.jata.model.Game;
+import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
 import edu.cnm.deepdive.jata.model.entity.User;
 import io.reactivex.rxjava3.core.Single;
@@ -17,14 +18,22 @@ import retrofit2.http.Path;
  */
 public interface JataServiceProxy {
 
+  // GAME
   @POST("games")
   Single<Game> startGame(
-      @Body int boardSize,
+      @Body Game game,
       @Header("Authorization") String bearerToken);
 
   @GET("games/{id}")
   Single<Game> getGame(
       @Path("id") String id,
+      @Header("Authorization") String bearerToken);
+
+  // SHIP
+  @POST("games/{gameKey}/ships")
+  List<Ship> submitShips(
+      @Path("gameKey") String key,
+      @Body List<Ship> ships
       @Header("Authorization") String bearerToken);
 
   // TODO: 4/3/2024 users/me endpoint working first.

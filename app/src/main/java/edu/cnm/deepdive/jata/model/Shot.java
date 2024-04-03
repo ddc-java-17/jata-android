@@ -23,4 +23,16 @@ public class Shot {
     this.shotCoordX = shotCoordX;
     this.shotCoordY = shotCoordY;
   }
+
+  public String getId() {
+    return id;
+  }
+
+  public int getShotCoordX() {
+    return shotCoordX;
+  }
+
+  public int getShotCoordY() {
+    return shotCoordY;
+  }
 }

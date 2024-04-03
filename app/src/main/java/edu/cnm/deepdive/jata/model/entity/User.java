@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import com.google.gson.annotations.Expose;
 import java.time.Instant;
 
 /**
@@ -50,6 +51,7 @@ public class User {
 
   @ColumnInfo(name = "display_name", collate = ColumnInfo.NOCASE)
   @NonNull
+  @Expose
   private String displayName = "";
 
   // TODO Define additional fields as appropriate.

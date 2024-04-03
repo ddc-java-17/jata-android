@@ -28,4 +28,16 @@ public class Game {
     this.boardSize = boardSize;
     this.playerCount = playerCount;
   }
+
+  public String getId() {
+    return id;
+  }
+
+  public int getBoardSize() {
+    return boardSize;
+  }
+
+  public int getPlayerCount() {
+    return playerCount;
+  }
 }
