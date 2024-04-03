@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class Ship {
 
   @Expose
-  private int shipNumber;
+  private final int shipNumber;
 
   @Expose
   private int shipCoordX;
@@ -19,10 +19,15 @@ public class Ship {
   private int shipCoordY;
 
   @Expose
-  private int length;
+  private final int length;
 
   @Expose
   private boolean isVertical;
+
+  public Ship(int shipNumber, int length) {
+    this.shipNumber = shipNumber;
+    this.length = length;
+  }
 
   /**
    * This getter gets the {@code shipNumber}
@@ -52,16 +57,16 @@ public class Ship {
    *
    * @return
    */
-  public int getShiCoordY() {
+  public int getShipCoordY() {
     return shipCoordY;
   }
 
   /**
    *
-   * @param shiCoordY
+   * @param shipCoordY
    */
-  public void setShiCoordY(int shiCoordY) {
-    this.shipCoordY = shiCoordY;
+  public void setShipCoordY(int shipCoordY) {
+    this.shipCoordY = shipCoordY;
   }
 
   /**
