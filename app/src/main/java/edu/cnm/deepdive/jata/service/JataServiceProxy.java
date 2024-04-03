@@ -33,7 +33,7 @@ public interface JataServiceProxy {
   @POST("games/{gameKey}/ships")
   List<Ship> submitShips(
       @Path("gameKey") String key,
-      @Body List<Ship> ships
+      @Body List<Ship> ships,
       @Header("Authorization") String bearerToken);
 
   // TODO: 4/3/2024 users/me endpoint working first.
