@@ -36,8 +36,8 @@ public class JataRepository {
   }
 
   /**
-   * This method is the bridge between the UI and the {@link JataServiceProxy}. When the user taps
-   * the Start Game button, it will invoke this method, then it will invoke the method
+   * This method is part of the bridge between the UI and the {@link JataServiceProxy}. When the user taps
+   * the Start Game button, it will, through a chain of events, invoke this method, then it will invoke the method
    * {@link JataServiceProxy#startGame(Game, String)} to send the request to the service.
    *
    * @param game A {@link Game} object.

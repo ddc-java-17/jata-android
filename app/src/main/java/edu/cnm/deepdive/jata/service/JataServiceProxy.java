@@ -18,7 +18,6 @@ import retrofit2.http.Path;
  */
 public interface JataServiceProxy {
 
-  // GAME
   @POST("games")
   Single<Game> startGame(
       @Body Game game,
@@ -31,11 +30,14 @@ public interface JataServiceProxy {
 
   // SHIP
   @POST("games/{gameKey}/ships")
-  List<Ship> submitShips(
+  Single<List<Ship>> submitShips(
       @Path("gameKey") String key,
       @Body List<Ship> ships,
       @Header("Authorization") String bearerToken);
 
+  Single<List<Shot>> submitShots(
+      @Path("")
+  )
 
   // TODO: 4/3/2024 users/me endpoint working first.
 

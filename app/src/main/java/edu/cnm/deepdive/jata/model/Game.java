@@ -2,15 +2,12 @@ package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import edu.cnm.deepdive.jata.model.entity.User;
-import java.util.Date;
-import java.util.List;
 
 public class Game {
 
   @SerializedName("key")
   @Expose(serialize = false, deserialize = true)
-  private final String id;
+  private final String key;
 
   @Expose
   private final int boardSize;
@@ -18,14 +15,14 @@ public class Game {
   @Expose
   private final int playerCount;
 
-  public Game(String id, int boardSize, int playerCount, List<Ship> ships, Date start) {
-    this.id = id;
+  public Game(String key, int boardSize, int playerCount) {
+    this.key = key;
     this.boardSize = boardSize;
     this.playerCount = playerCount;
   }
 
-  public String getId() {
-    return id;
+  public String getKey() {
+    return key;
   }
 
   public int getBoardSize() {
