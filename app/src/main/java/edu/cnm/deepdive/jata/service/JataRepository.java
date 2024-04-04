@@ -76,7 +76,13 @@ public class JataRepository {
     return signInService
         .refreshBearerToken()
         .observeOn(scheduler)
-        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token));
+        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token)); // TODO: 4/4/2024 Remove semicolon at the end of this line when we are ready to uncomment the following code.
+//        .flatMap((shots) -> {
+//          board.getShots().add(shot);
+//          return (game.isTurn && (!board.isFleetSunk() && (game.isStart && !game.isFinished)))
+//              ? Single.just(shots)
+//              : // NO SHOTS FOR YOU!!!;
+//        });
     // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true or when game is over.
     // TODO: 4/4/2024 check to see if less than n-1 fleets are sunk.
     // TODO: 4/4/2024 prevent people from submitting shots when game is over.
