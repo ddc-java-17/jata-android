@@ -21,6 +21,13 @@ public class Ship {
   @Expose
   private boolean vertical;
 
+  public Ship(int x, int y, int length, boolean vertical) {
+    this.x = x;
+    this.y = y;
+    this.length = length;
+    this.vertical = vertical;
+  }
+
   /**
    * This constructor initiates the final fields in this class.
    *

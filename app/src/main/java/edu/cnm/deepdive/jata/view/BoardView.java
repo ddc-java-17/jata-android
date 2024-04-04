@@ -60,17 +60,28 @@ public class BoardView extends View {
 
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    int width = getSuggestedMinimumWidth();
+    int height = getSuggestedMinimumHeight();
+    width =
+        resolveSizeAndState(getPaddingLeft() + getPaddingRight() + width, widthMeasureSpec, 0);
+    height =
+        resolveSizeAndState(getPaddingTop() + getPaddingBottom() + height, heightMeasureSpec, 0);
+    int size = Math.min(width, height);
+    setMeasuredDimension(size, size);
+    cellWidth = (float) width / this.size;
+    cellHeight = (float) height / this.size;
   }
 
   @Override
   protected void onDraw(@NonNull Canvas canvas) {
     super.onDraw(canvas);
-    Context context = getContext();
-    loadResources(context);
-    drawGrid(canvas);
-    drawShips(canvas);
-    drawShots(canvas);
+    if (board != null && size > 0) {
+      Context context = getContext();
+      loadResources(context);
+      drawGrid(canvas);
+      drawShips(canvas);
+      drawShots(canvas);
+    }
   }
 
   public void setBoard(Board board) {
@@ -101,6 +112,7 @@ public class BoardView extends View {
         }
       });
     }
+    postInvalidate();
   }
 
   public void setListener(OnClickListener listener) {
@@ -121,9 +133,11 @@ public class BoardView extends View {
     // TODO: 4/3/2024 invoke drawable.draw (canvas)  to draw ships on canvas.
     for (Ship ship : board.getShips()) {
       // TODO: 4/3/2024 use the ships x and y coords and orientation to select drawable to set bounds
-    largeShip.setBounds(0, 0, (int) (4 * cellWidth), (int) cellHeight);
+    largeShip.setBounds((int) ((ship.getX() - 1) * cellWidth), (int) ((ship.getY() -1) * cellHeight),
+        (int) ((ship.getX() - 1 + ship.getLength()) * cellWidth), (int) cellHeight);
     largeShip.draw(canvas);
     }
+
   }
 
   private void drawShots(Canvas canvas) {
