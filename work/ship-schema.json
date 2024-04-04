@@ -1,9 +1,6 @@
-Ship Schema
-
 {
-    "X": {int},
-    "Y": {int},
+    "x": {int},
+    "y": {int},
     "length": {int},
-    "isVertical": {boolean},
-    "sunk": {boolean} ??? // Don't need to send this when firing, but we'll recieve it with the following update
+    "vertical": {boolean}
 }
