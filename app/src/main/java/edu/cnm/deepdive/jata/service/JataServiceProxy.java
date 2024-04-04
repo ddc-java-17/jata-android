@@ -18,7 +18,6 @@ import retrofit2.http.Path;
  */
 public interface JataServiceProxy {
 
-  // GAME
   @POST("games")
   Single<Game> startGame(
       @Body Game game,
