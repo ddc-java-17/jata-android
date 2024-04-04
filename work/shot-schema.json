@@ -1,0 +1,8 @@
+Shot Schema
+
+{
+    "X": {int},
+    "Y": {int},
+    "hit": {boolean},
+    "user": {user schema} // INCLUDE THIS WHEN SENDING SHOTS TO THE SERVER
+}
