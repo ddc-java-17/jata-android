@@ -19,7 +19,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/navigation_graph"
-  app:startDestination="@id/navigation_sign_in_demo">
+  app:startDestination="@id/home_fragment">
 
   <action
     android:id="@+id/explain_permissions"
@@ -33,6 +33,11 @@
       app:argType="string[]"/>
 
   </action>
+
+  <fragment
+    android:id="@+id/home_fragment"
+    android:name="edu.cnm.deepdive.jata.controller.HomeFragment"
+    tools:layout="@layout/fragment_home"/>
 
   <fragment
     android:id="@+id/navigation_sign_in_demo"
