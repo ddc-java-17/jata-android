@@ -1,6 +1,6 @@
 User Schema
 
 {
-    "key": "{user UUID key",
+    "key": "{user UUID key}",
     "displayName": "{string}"
 }
