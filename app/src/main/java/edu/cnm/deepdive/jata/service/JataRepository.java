@@ -77,10 +77,7 @@ public class JataRepository {
         .refreshBearerToken()
         .observeOn(scheduler)
         .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token));
-//    return (board.isSunk() || game.isFinished)
-//        ?
-//        :
-    // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true or when isFinished = true.
+    // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true or when game is over.
     // TODO: 4/4/2024 check to see if less than n-1 fleets are sunk.
     // TODO: 4/4/2024 prevent people from submitting shots when game is over.
   }
