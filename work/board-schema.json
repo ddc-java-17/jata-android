@@ -1,7 +1,4 @@
-Board Schema
-
 {
-    
     "placed": {boolean},
     "fleetSunk": {boolean},
     "user": {user schema},
@@ -13,5 +10,4 @@ Board Schema
         {ships schema },
         ...
     ]
-
 }

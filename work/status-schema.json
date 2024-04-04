@@ -1,6 +1,3 @@
-Json Status / Long Poll Response Schema
-
-
 {
     "key": "{game UUID key}"
     "boardSize": {int}  // REQUIRED WHEN JOINING/STARTING
