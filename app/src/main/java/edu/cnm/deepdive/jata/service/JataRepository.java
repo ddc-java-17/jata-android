@@ -1,9 +1,9 @@
 package edu.cnm.deepdive.jata.service;
 
+import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
-import edu.cnm.deepdive.jata.model.entity.Board;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -30,14 +30,15 @@ public class JataRepository {
   /**
    * This constructor initializes
    *
-   * @param proxy This is {@link JataServiceProxy} and its job is to talk to the server when it is
-   *             asked to.
+   * @param proxy          This is {@link JataServiceProxy} and its job is to talk to the server
+   *                       when it is asked to.
    * @param userRepository this...
-   * @param signInService This is {@link GoogleSignInService} and it allows our users to log into our
-   *                      app and service.
+   * @param signInService  This is {@link GoogleSignInService} and it allows our users to log into
+   *                       our app and service.
    */
   @Inject
-  JataRepository(JataServiceProxy proxy, UserRepository userRepository, GoogleSignInService signInService) {
+  JataRepository(JataServiceProxy proxy, UserRepository userRepository,
+      GoogleSignInService signInService) {
     this.proxy = proxy;
     this.userRepository = userRepository;
     this.signInService = signInService;
@@ -45,14 +46,15 @@ public class JataRepository {
   }
 
   /**
-   * This method is part of the bridge between the UI and the {@link JataServiceProxy}. When the user taps
-   * the Start Game button, it will, through a chain of events, invoke this method, then it will invoke the method
-   * {@link JataServiceProxy#startGame(Game, String)} to send the request to the service.
+   * This method is part of the bridge between the UI and the {@link JataServiceProxy}. When the
+   * user taps the Start Game button, it will, through a chain of events, invoke this method, then
+   * it will invoke the method {@link JataServiceProxy#startGame(Game, String)} to send the request
+   * to the service.
    *
    * @param game A {@link Game} object.
    * @return {@link Single<Game>} A single {@link Game} object that the user can join whether it is
-   *                              a new {@link Game} or another instance with the same game
-   *                              preferences with room for another player.
+   * a new {@link Game} or another instance with the same game preferences with room for another
+   * player.
    */
   public Single<Game> startGame(Game game) {
     return signInService
@@ -78,9 +80,9 @@ public class JataRepository {
 //    return (board.isSunk() || game.isFinished)
 //        ?
 //        :
-        // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true or when isFinished = true.
-          // TODO: 4/4/2024 check to see if less than n-1 fleets are sunk.
-        // TODO: 4/4/2024 prevent people from submitting shots when game is over.
+    // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true or when isFinished = true.
+    // TODO: 4/4/2024 check to see if less than n-1 fleets are sunk.
+    // TODO: 4/4/2024 prevent people from submitting shots when game is over.
   }
 
   public Single<Game> getGame(String key) {
@@ -88,7 +90,6 @@ public class JataRepository {
         .refreshBearerToken()
         .flatMap((token) -> proxy.getGame(key, token).doOnSuccess(this::setGame));
   }
-
 
 
   private void setGame(Game game) {

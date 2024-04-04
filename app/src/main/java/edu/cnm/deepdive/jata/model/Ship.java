@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * This is the domain class that represents {@link Ship} instances in the game. This class will
@@ -24,9 +23,6 @@ public class Ship {
   /**
    * This constructor initiates the final fields in this class.
    *
-   * @param shipNumber The identifying number of a {@link Ship} on any given {@link Board} instance.
-   *                   Every {@code shipNumber} is unique to the {@link Board} instance, but not the
-   *                   {@link Game} instance.
    * @param length The number that indicates the length of a particular {@link Ship}. This also
    *               indicates the total number of hits the {@code ship} can take, and the type of
    *               {@code ship} it is as well (Trireme vs Galley vs Canoe; basically flavor text).

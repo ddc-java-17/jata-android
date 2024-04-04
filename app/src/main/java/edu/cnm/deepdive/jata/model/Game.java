@@ -1,13 +1,11 @@
 package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Game {
 
-  @SerializedName("key")
   @Expose(serialize = false, deserialize = true)
   private final String key;
 
