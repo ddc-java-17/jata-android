@@ -15,7 +15,10 @@ public class Game {
   @Expose
   private final int playerCount;
 
-  // TODO: 4/4/2024 Add isFinished boolean flag.
+//  @SerializedName("finished")
+//  @Expose
+//  private boolean isFinished;
+  // TODO: 4/4/2024 Uncomment this code when it is implemented on the server side.
 
   public Game(String key, int boardSize, int playerCount) {
     this.key = key;

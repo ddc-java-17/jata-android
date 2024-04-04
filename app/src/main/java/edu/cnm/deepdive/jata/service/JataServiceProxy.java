@@ -43,4 +43,6 @@ public interface JataServiceProxy {
 
   // TODO: 4/3/2024 users/me endpoint working first.
 
+  // TODO: 4/4/2024 Long poll will go here.
+
 }
