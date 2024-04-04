@@ -37,7 +37,7 @@ public class BoardFragment extends Fragment {
   public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     // TODO: 4/3/2024 connect to viewmodels as needed and observe live data.
-    //  - when obserever is exectued when game is updated, invoke the following
+    //  - when observer is executed when game is updated, invoke the following
     //    - binding.gameBoard.setSize(game.getSize())
     //    - binding.gameBoard.setBoard(game.getBoards().get(boardIndex));
   }

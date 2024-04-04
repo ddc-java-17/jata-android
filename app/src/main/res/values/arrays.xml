@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string-array name="board_size_names">
+    <item>Small (8x8)</item>
+    <item>Medium (9x9)</item>
+    <item>Large (10x10)</item>
+  </string-array>
+
+  <integer-array name="board_size_values">
+    <item>8</item>
+    <item>9</item>
+    <item>10</item>
+  </integer-array>
+
+  <string-array name="player_count">
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+  </string-array>
+
+</resources>

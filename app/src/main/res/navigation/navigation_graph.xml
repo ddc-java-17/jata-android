@@ -19,7 +19,7 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/navigation_graph"
-  app:startDestination="@id/navigation_sign_in_demo">
+  app:startDestination="@id/home_fragment">
 
   <action
     android:id="@+id/explain_permissions"
@@ -35,6 +35,38 @@
   </action>
 
   <fragment
+    android:id="@+id/game_fragment"
+    android:name="edu.cnm.deepdive.jata.controller.GameFragment"
+    tools:layout="@layout/fragment_game">
+
+    <argument
+      android:name="board_size"
+      app:argType="integer"/>
+
+    <argument
+      android:name="player_count"
+      app:argType="integer"/>
+  </fragment>
+
+  <fragment
+    android:id="@+id/home_fragment"
+    android:name="edu.cnm.deepdive.jata.controller.HomeFragment"
+    tools:layout="@layout/fragment_home">
+
+    <action
+      android:id="@+id/navigate_to_game"
+      app:destination="@id/game_fragment">
+      <argument
+        android:name="board_size"
+        app:argType="integer"/>
+      <argument
+        android:name="player_count"
+        app:argType="integer"/>
+    </action>
+
+  </fragment>
+
+  <fragment
     android:id="@+id/navigation_sign_in_demo"
     android:name="edu.cnm.deepdive.jata.controller.DemoFragment"
     tools:layout="@layout/fragment_demo"/>
@@ -46,6 +78,7 @@
     <argument
       android:name="permissions_to_explain"
       app:argType="string[]"/>
+
     <argument
       android:name="permissions_to_request"
       app:argType="string[]"/>

@@ -41,7 +41,6 @@ public class User {
 
   @PrimaryKey(autoGenerate = true)
   @ColumnInfo(name = "user_id")
-  @Ignore
   private long id;
 
   @Expose
@@ -49,12 +48,10 @@ public class User {
   // TODO: 4/4/2024 figure out if I need to have this field here, make it final or not, etc.
 
   @NonNull
-  @Ignore
   private Instant created = Instant.MIN;
 
   @ColumnInfo(name = "oauth_key")
   @NonNull
-  @Ignore
   private String oauthKey = "";
 
   @ColumnInfo(name = "display_name", collate = ColumnInfo.NOCASE)
@@ -79,6 +76,14 @@ public class User {
   @SuppressWarnings("JavadocDeclaration")
   public void setId(long id) {
     this.id = id;
+  }
+
+  public String getKey() {
+    return key;
+  }
+
+  public void setKey(String key) {
+    this.key = key;
   }
 
   /**
