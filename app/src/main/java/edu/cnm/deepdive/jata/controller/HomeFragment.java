@@ -9,6 +9,8 @@ import android.widget.SpinnerAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.databinding.FragmentHomeBinding;
 
@@ -28,7 +30,6 @@ public class HomeFragment extends Fragment {
     String[] playerCount = getResources().getStringArray(R.array.player_count);
     binding.playerCount.setAdapter(new ArrayAdapter<>(
         requireContext(), android.R.layout.simple_dropdown_item_1line, playerCount));
-    binding.startGame.setOnClickListener((game) -> onStart());
     // TODO: 4/4/2024 attach click listener to button to start game.
     return binding.getRoot();
   }
@@ -36,6 +37,9 @@ public class HomeFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    NavController navController = Navigation
+        .findNavController(view);
+    binding.startGame.setOnClickListener((v) -> navController.navigate(HomeFragmentDirections.navigateToGame()));
   }
 
 }
