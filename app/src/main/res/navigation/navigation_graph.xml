@@ -38,6 +38,14 @@
     android:id="@+id/game_fragment"
     android:name="edu.cnm.deepdive.jata.controller.GameFragment"
     tools:layout="@layout/fragment_game">
+
+    <argument
+      android:name="board_size"
+      app:argType="integer"/>
+
+    <argument
+      android:name="player_count"
+      app:argType="integer"/>
   </fragment>
 
   <fragment
@@ -47,7 +55,14 @@
 
     <action
       android:id="@+id/navigate_to_game"
-      app:destination="@id/game_fragment"/>
+      app:destination="@id/game_fragment">
+      <argument
+        android:name="board_size"
+        app:argType="integer"/>
+      <argument
+        android:name="player_count"
+        app:argType="integer"/>
+    </action>
 
   </fragment>
 
@@ -63,6 +78,7 @@
     <argument
       android:name="permissions_to_explain"
       app:argType="string[]"/>
+
     <argument
       android:name="permissions_to_request"
       app:argType="string[]"/>

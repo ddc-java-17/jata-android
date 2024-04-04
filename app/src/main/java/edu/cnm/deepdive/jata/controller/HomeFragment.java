@@ -5,18 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.databinding.FragmentHomeBinding;
 
+@AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
   private FragmentHomeBinding binding;
+  private NavController navController;
 
   @Nullable
   @Override
@@ -31,15 +33,17 @@ public class HomeFragment extends Fragment {
     binding.playerCount.setAdapter(new ArrayAdapter<>(
         requireContext(), android.R.layout.simple_dropdown_item_1line, playerCount));
     // TODO: 4/4/2024 attach click listener to button to start game.
+    binding.startGame.setOnClickListener((v) -> navController.navigate(HomeFragmentDirections.navigateToGame(
+        boardSizeValues[binding.boardSize.getSelectedItemPosition()],
+        Integer.parseInt((String) binding.playerCount.getSelectedItem())
+    )));
     return binding.getRoot();
   }
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    NavController navController = Navigation
-        .findNavController(view);
-    binding.startGame.setOnClickListener((v) -> navController.navigate(HomeFragmentDirections.navigateToGame()));
+    navController = Navigation.findNavController(view);
   }
 
 }

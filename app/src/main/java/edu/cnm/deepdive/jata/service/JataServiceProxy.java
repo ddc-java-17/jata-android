@@ -35,9 +35,7 @@ public interface JataServiceProxy {
       @Body List<Ship> ships,
       @Header("Authorization") String bearerToken);
 
-  Single<List<Shot>> submitShots(
-      @Path("")
-  )
+
 
   // TODO: 4/3/2024 users/me endpoint working first.
 
