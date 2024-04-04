@@ -25,7 +25,7 @@ public class GameFragment extends Fragment {
     GameFragmentArgs gameFragmentArgs = GameFragmentArgs.fromBundle(getArguments());
     boardSize = gameFragmentArgs.getBoardSize();
     playerCount = gameFragmentArgs.getPlayerCount();
-  }
+     }
 
   @Nullable
   @Override
@@ -33,8 +33,7 @@ public class GameFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
     // where we add listeners and configure view widgets.
-    binding.boardSize.setText(String.valueOf(boardSize));
-    binding.playerCount.setText(String.valueOf(playerCount));
+
     return binding.getRoot();
   }
 

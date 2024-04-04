@@ -14,7 +14,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
-import edu.cnm.deepdive.jata.model.entity.Board;
+import edu.cnm.deepdive.jata.model.Board;
 
 public class BoardView extends View {
 
