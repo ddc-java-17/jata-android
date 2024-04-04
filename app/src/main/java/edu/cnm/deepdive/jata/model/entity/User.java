@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
@@ -40,13 +41,20 @@ public class User {
 
   @PrimaryKey(autoGenerate = true)
   @ColumnInfo(name = "user_id")
+  @Ignore
   private long id;
 
+  @Expose
+  private String key;
+  // TODO: 4/4/2024 figure out if I need to have this field here, make it final or not, etc.
+
   @NonNull
+  @Ignore
   private Instant created = Instant.MIN;
 
   @ColumnInfo(name = "oauth_key")
   @NonNull
+  @Ignore
   private String oauthKey = "";
 
   @ColumnInfo(name = "display_name", collate = ColumnInfo.NOCASE)
@@ -165,3 +173,5 @@ public class User {
   }
 
 }
+
+// Everyone asks what is the user, but no one asks HOW is the user...

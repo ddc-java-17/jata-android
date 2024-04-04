@@ -13,15 +13,18 @@ public class Ship {
   @Expose
   private final int shipNumber;
 
+  @SerializedName("x")
   @Expose
   private int shipCoordX;
 
+  @SerializedName("y")
   @Expose
   private int shipCoordY;
 
   @Expose
   private final int length;
 
+  @SerializedName("vertical")
   @Expose
   private boolean isVertical;
 
