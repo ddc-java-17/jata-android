@@ -18,15 +18,24 @@ public class Game {
   @Expose
   private final List<Board> boards;
 
-  public Game(String key, int boardSize, int playerCount, List<Board> boards) {
+  @Expose(serialize = false, deserialize = true)
+  private final boolean isStart;
+
+  @Expose(serialize = false, deserialize = true)
+  private final boolean isFinished;
+
+  public Game(String key, int boardSize, int playerCount, List<Board> boards, boolean isStart,
+      boolean isFinished) {
     this.key = key;
     this.boardSize = boardSize;
     this.playerCount = playerCount;
     this.boards = boards;
+    this.isStart = isStart;
+    this.isFinished = isFinished;
   }
 
-  public Game(int boardSize, int playerCount) {
-    this(null, boardSize, playerCount, new LinkedList<>());
+  public Game(int boardSize, int playerCount, boolean isStart, boolean isFinished) {
+    this(null, boardSize, playerCount, new LinkedList<>(), isFinished, isStart);
   }
 
   public String getKey() {
@@ -45,4 +54,11 @@ public class Game {
     return boards;
   }
 
+  public boolean isStart() {
+    return isStart;
+  }
+
+  public boolean isFinished() {
+    return isFinished;
+  }
 }
