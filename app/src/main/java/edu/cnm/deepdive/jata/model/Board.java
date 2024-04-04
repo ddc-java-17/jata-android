@@ -1,8 +1,7 @@
-package edu.cnm.deepdive.jata.model.entity;
+package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
-import edu.cnm.deepdive.jata.model.Ship;
-import edu.cnm.deepdive.jata.model.Shot;
+import edu.cnm.deepdive.jata.model.entity.User;
 import java.util.List;
 
 public class Board {
@@ -16,15 +15,15 @@ public class Board {
   @Expose
   private final boolean placed;
   @Expose
-  private final boolean sunk;
+  private final boolean fleetSunk;
 
 
-  public Board(User player, List<Shot> shots, List<Ship> ships, boolean placed, boolean sunk) {
+  public Board(User player, List<Shot> shots, List<Ship> ships, boolean placed, boolean fleetSunk) {
     this.player = player;
     this.shots = shots;
     this.ships = ships;
     this.placed = placed;
-    this.sunk = sunk;
+    this.fleetSunk = fleetSunk;
   }
 
   public User getPlayer() {
@@ -43,7 +42,7 @@ public class Board {
     return placed;
   }
 
-  public boolean isSunk() {
-    return sunk;
+  public boolean isFleetSunk() {
+    return fleetSunk;
   }
 }

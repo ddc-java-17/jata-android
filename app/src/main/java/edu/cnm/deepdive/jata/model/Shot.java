@@ -2,39 +2,48 @@ package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import edu.cnm.deepdive.jata.model.entity.Board;
 import edu.cnm.deepdive.jata.model.entity.User;
 
 public class Shot {
 
-  @SerializedName("key")
-  @Expose
-  private final String id;
-
-  // TODO: 4/3/2024 Field for toUser or who the Shot was fired against.
+  @Expose(serialize = false, deserialize = true)
+  private final String key;
 
   @Expose
-  private final int shotCoordX;
+  private final User toUser;
 
   @Expose
-  private final int shotCoordY;
+  private final int x;
+
+  @Expose
+  private final int y;
 
 
-  public Shot(String id, int shotCoordX, int shotCoordY) {
-    this.id = id;
-    this.shotCoordX = shotCoordX;
-    this.shotCoordY = shotCoordY;
+  public Shot(String key, User toUser, int x, int y) {
+    this.key = key;
+    this.toUser = toUser;
+    this.x = x;
+    this.y = y;
   }
 
-  public String getId() {
-    return id;
+  public Shot(User toUser, int x, int y) {
+    this(null, toUser, x, y);
   }
 
-  public int getShotCoordX() {
-    return shotCoordX;
+  public String getKey() {
+    return key;
   }
 
-  public int getShotCoordY() {
-    return shotCoordY;
+  public int getX() {
+    return x;
   }
+
+  public int getY() {
+    return y;
+  }
+
+  public User getToUser() {
+    return toUser;
+  }
+
 }
