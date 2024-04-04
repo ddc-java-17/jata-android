@@ -1,9 +1,12 @@
 package edu.cnm.deepdive.jata.service;
 
 import edu.cnm.deepdive.jata.model.Game;
+import edu.cnm.deepdive.jata.model.Shot;
+import edu.cnm.deepdive.jata.model.entity.Board;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.List;
 import javax.inject.Inject;
 
 /**
@@ -19,6 +22,8 @@ public class JataRepository {
   private final GoogleSignInService signInService;
   private final Scheduler scheduler;
   private Game game;
+  private Board board;
+  private Shot shot;
 
   /**
    * This constructor initializes
@@ -52,6 +57,26 @@ public class JataRepository {
         .flatMap((token) -> proxy.startGame(game, token))
         .doOnSuccess(this::setGame);
   }
+
+  public Single<List<Shot>> submitShots(List<Shot> shots) {
+    return signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token))
+        // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true
+          // TODO: 4/4/2024 check to see if more than n-1 fleets are sunk.
+        // TODO: 4/4/2024 prevent people from submitting shots when game is over.
+
+        ;
+  }
+
+  public Single<Game> getGame(String key) {
+    return signInService
+        .refreshBearerToken()
+        .flatMap((token) -> proxy.getGame(key, token).doOnSuccess(this::setGame));
+  }
+
+
 
   private void setGame(Game game) {
     this.game = game;

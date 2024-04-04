@@ -15,6 +15,8 @@ public class Game {
   @Expose
   private final int playerCount;
 
+  // TODO: 4/4/2024 Add isFinished boolean flag.
+
   public Game(String key, int boardSize, int playerCount) {
     this.key = key;
     this.boardSize = boardSize;
