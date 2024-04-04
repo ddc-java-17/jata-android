@@ -18,11 +18,6 @@ public class Game {
   @Expose
   private final int playerCount;
 
-  // UserGame -> Board magic
-
-
-
-
   public Game(String id, int boardSize, int playerCount, List<Ship> ships, Date start) {
     this.id = id;
     this.boardSize = boardSize;

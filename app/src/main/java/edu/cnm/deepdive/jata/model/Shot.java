@@ -8,13 +8,15 @@ import edu.cnm.deepdive.jata.model.entity.User;
 public class Shot {
 
   @SerializedName("key")
-  @Expose(serialize = false, deserialize = true)
+  @Expose
   private final String id;
 
   // TODO: 4/3/2024 Field for toUser or who the Shot was fired against.
 
+  @Expose
   private final int shotCoordX;
 
+  @Expose
   private final int shotCoordY;
 
 
