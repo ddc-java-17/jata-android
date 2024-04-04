@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import edu.cnm.deepdive.jata.model.entity.User;
 
 public class Shot {
