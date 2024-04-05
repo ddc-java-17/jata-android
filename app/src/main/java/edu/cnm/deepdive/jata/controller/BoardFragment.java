@@ -3,6 +3,9 @@ package edu.cnm.deepdive.jata.controller;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -12,8 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.databinding.FragmentBoardBinding;
+import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BoardFragment extends Fragment {
@@ -24,6 +29,7 @@ public class BoardFragment extends Fragment {
   private FragmentBoardBinding binding;
   private GameViewModel viewModel;
   private int boardIndex;
+  private Board board;
 
 
   @Override
@@ -43,6 +49,18 @@ public class BoardFragment extends Fragment {
     return binding.getRoot();
   }
 
+  @Override
+  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
+    viewModel.getGame()
+        .observe(getViewLifecycleOwner(), (game) -> {
+          binding.gameBoard.setSize(game.getBoardSize());
+          board = game.getBoards().get(boardIndex);
+          binding.gameBoard.setBoard(board);
+        });
+  }
+
   private void handleLongClick(int gridX, int gridY, float viewX, float viewY, Ship ship) {
     Log.d(TAG,
         String.format("longClicked: %1$d, %2$d, %4$f, %5$f, %3$s", gridX, gridY, ship, viewX,
@@ -52,18 +70,20 @@ public class BoardFragment extends Fragment {
     binding.horizontalGuideline.setGuidelinePercent(heightFraction);
     binding.verticalGuideline.setGuidelinePercent(widthFraction);
     PopupMenu popupMenu = new PopupMenu(requireContext(), binding.popUpMenuFocus);
-    popupMenu.getMenuInflater().inflate(R.menu.ship_actions, popupMenu.getMenu());
+    Menu menu = popupMenu.getMenu();
+    popupMenu.getMenuInflater().inflate(R.menu.ship_actions, menu);
+    menu.findItem(R.id.rotate).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+      @Override
+      public boolean onMenuItemClick(@NonNull MenuItem item) {
+        List<Ship> placement = new LinkedList<>(board.getShips());
+        Ship rotatedShip = new Ship(ship.getX(), ship.getY(), ship.getLength(), !ship.isVertical());
+        placement.remove(ship);
+        placement.add(rotatedShip);
+        viewModel.changePlacement(placement, boardIndex);
+        return true;
+      }
+    });
     popupMenu.show();
   }
 
-  @Override
-  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
-    viewModel.getGame()
-        .observe(getViewLifecycleOwner(), (game) -> {
-          binding.gameBoard.setSize(game.getBoardSize());
-          binding.gameBoard.setBoard(game.getBoards().get(boardIndex));
-        });
-  }
 }

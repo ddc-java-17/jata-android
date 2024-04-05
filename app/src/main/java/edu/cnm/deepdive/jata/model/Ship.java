@@ -1,6 +1,8 @@
 package edu.cnm.deepdive.jata.model;
 
+import androidx.annotation.Nullable;
 import com.google.gson.annotations.Expose;
+import java.util.Objects;
 
 /**
  * This is the domain class that represents {@link Ship} instances in the game. This class will
@@ -116,6 +118,26 @@ public class Ship {
        : y == gridY && gridX >= x && gridX < x + length;
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(x, y, length, vertical);
+  }
+
+  @Override
+  public boolean equals(@Nullable Object obj) {
+    boolean equals;
+    if (obj == this) {
+      equals = true;
+    } else if (obj instanceof Ship other) {
+      equals = this.x == other.x
+          && this.y == other.y
+          && this.length == other.length
+          && this.vertical == other.vertical;
+    } else {
+      equals = false;
+    }
+    return equals;
+  }
 }
 
 

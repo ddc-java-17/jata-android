@@ -9,10 +9,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import edu.cnm.deepdive.jata.model.Game;
+import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.service.JataRepository;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import java.util.List;
 import javax.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +38,8 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     pending = new CompositeDisposable();
     gamePoll = jataRepository.pollGameStatus();
     throwablePoll = jataRepository.pollThrowable();
-
+    pollGame();
+    pollThrowable();
   }
 
   public LiveData<Game> getGame() {
@@ -69,6 +72,10 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
             () -> {},
             pending
         );
+  }
+
+  public void changePlacement(List<Ship> ships, int boardIndex) {
+    jataRepository.changePlacement(ships, boardIndex);
   }
 
   @Override

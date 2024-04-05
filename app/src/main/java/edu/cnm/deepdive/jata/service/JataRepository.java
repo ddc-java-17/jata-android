@@ -87,8 +87,9 @@ public class JataRepository {
     User user = new User();
     user.setDisplayName("ducky");
     Board board = new Board(user, List.of(), ships, true, false);
-    updateGame(new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
-        false, false));
+    this.game = new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
+        false, false);
+    updateGame(this.game);
   }
 
   public void submitShips(List<Ship> ships) {
@@ -179,11 +180,11 @@ public class JataRepository {
           step < length;
           checkY += stepY, checkX += stepX, step++
       ) {
-        if (placement[y][x]) {
+        if (placement[checkY][checkX]) {
           valid = false;
           break outer;
         }
-        placement[y][x] = true;
+        placement[checkY][checkX] = true;
       }
     }
     return valid;
