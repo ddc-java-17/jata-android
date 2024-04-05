@@ -16,6 +16,12 @@ import retrofit2.http.Path;
  */
 public interface JataServiceProxy {
 
+  /**
+   *
+   * @param game
+   * @param bearerToken
+   * @return
+   */
   @POST("games")
   Single<Game> startGame(
       @Body Game game,
@@ -27,7 +33,7 @@ public interface JataServiceProxy {
       @Header("Authorization") String bearerToken);
 
   // SHIP
-  @POST("games/{gameKey}/ships") // may be a PUT, talk to Reed bout it. POST does work
+  @POST("games/{gameKey}/ships") // may be a PUT, talk to Reed bout it when he isn't working on getting the server to build. POST does work
   Single<List<Ship>> submitShips(
       @Path("gameKey") String key,
       @Body List<Ship> ships,
