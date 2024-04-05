@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import edu.cnm.deepdive.jata.databinding.FragmentBoardBinding;
+import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
 import java.util.List;
 
 public class BoardFragment extends Fragment {
@@ -15,6 +17,7 @@ public class BoardFragment extends Fragment {
   public static final String BOARD_INDEX_KEY = "board_index";
 
   private FragmentBoardBinding binding;
+  private GameViewModel viewModel;
   private int boardIndex;
 
 
@@ -40,5 +43,11 @@ public class BoardFragment extends Fragment {
     //  - when observer is executed when game is updated, invoke the following
     //    - binding.gameBoard.setSize(game.getSize())
     //    - binding.gameBoard.setBoard(game.getBoards().get(boardIndex));
+    viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
+    viewModel.getGame()
+        .observe(getViewLifecycleOwner(), (game) -> {
+          binding.gameBoard.setSize(game.getBoardSize());
+          binding.gameBoard.setBoard(game.getBoards().get(boardIndex));
+        });
   }
 }

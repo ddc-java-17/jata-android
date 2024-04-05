@@ -7,14 +7,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.tabs.TabLayout.Tab;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy;
 import dagger.hilt.android.AndroidEntryPoint;
+import edu.cnm.deepdive.jata.adapter.BoardsAdapter;
 import edu.cnm.deepdive.jata.databinding.FragmentGameBinding;
+import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
 
 @AndroidEntryPoint
 public class GameFragment extends Fragment {
 
   private FragmentGameBinding binding;
-  // TODO: 4/4/2024 declare fields for viewmodel
+  private GameViewModel viewModel;
   private int boardSize;
   private int playerCount;
 
@@ -40,6 +46,14 @@ public class GameFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    // where we connect to viewmodels, create observers, trigger actions
+    viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
+    viewModel.getGame()
+        .observe(getViewLifecycleOwner(), (game) -> {
+          BoardsAdapter adapter = new BoardsAdapter(this, game);
+          binding.playerBoardsHost.setAdapter(adapter);
+          new TabLayoutMediator(binding.playerBoards, binding.playerBoardsHost,
+              (tab, position) -> tab.setText(game.getBoards().get(position).getPlayer().getDisplayName()))
+              .attach();
+        });
   }
 }
