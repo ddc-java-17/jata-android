@@ -4,7 +4,8 @@ import com.google.gson.annotations.Expose;
 
 /**
  * This is the domain class that represents {@link Ship} instances in the game. This class will
- * store and transfer relevant data for the client side of the game.
+ * store and transfer relevant data for the client side of the game, in addition to holding
+ * business logic regarding
  */
 public class Ship {
 
@@ -20,6 +21,14 @@ public class Ship {
   @Expose
   private boolean vertical;
 
+  /**
+   * This constructor initializes the fields in {@link Ship}.
+   *
+   * @param x        The x value of the ship coordinate.
+   * @param y        The y value of the ship coordinate.
+   * @param length   The length of a ship, and also the number of hits it can take.
+   * @param vertical The boolean flag indicating the orientation of the ship on the board.
+   */
   public Ship(int x, int y, int length, boolean vertical) {
     this.x = x;
     this.y = y;

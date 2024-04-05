@@ -19,6 +19,9 @@ public class Game {
   private final List<Board> boards;
 
   @Expose(serialize = false, deserialize = true)
+  private final boolean fleetSunk;
+
+  @Expose(serialize = false, deserialize = true)
   private final boolean started;
 
   @Expose(serialize = false, deserialize = true)
@@ -28,19 +31,20 @@ public class Game {
   private final boolean yourTurn;
   // TODO: 4/4/2024 Uncomment when I can figure out how to initialize this stuff without upsetting the constructor situation.
 
-  public Game(String key, int boardSize, int playerCount, List<Board> boards, boolean started,
+  public Game(String key, int boardSize, int playerCount, List<Board> boards, boolean fleetSunk, boolean started,
       boolean finished, boolean yourTurn) {
     this.key = key;
     this.boardSize = boardSize;
     this.playerCount = playerCount;
     this.boards = boards;
+    this.fleetSunk = fleetSunk;
     this.started = started;
     this.finished = finished;
     this.yourTurn = yourTurn;
   }
 
   public Game(int boardSize, int playerCount) {
-    this(null, boardSize, playerCount, new LinkedList<>(), false, false, false);
+    this(null, boardSize, playerCount, new LinkedList<>(), false, false, false, false);
   }
 
   public String getKey() {

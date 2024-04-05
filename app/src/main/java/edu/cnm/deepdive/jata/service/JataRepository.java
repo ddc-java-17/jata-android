@@ -86,7 +86,7 @@ public class JataRepository {
           User user = new User();
           user.setDisplayName("ducky");
           Board board = new Board(user, List.of(), ships, true, false);
-          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
+          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false, false,
               false, false);
     })
         .subscribeOn(scheduler);
