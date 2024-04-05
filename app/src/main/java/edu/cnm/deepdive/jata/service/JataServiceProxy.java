@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -17,6 +18,7 @@ import retrofit2.http.Path;
 public interface JataServiceProxy {
 
   /**
+   * This method uses retrofit2 to send an HTTP {@link POST}
    *
    * @param game
    * @param bearerToken
@@ -48,5 +50,6 @@ public interface JataServiceProxy {
   // TODO: 4/3/2024 users/me endpoint working first.
 
   // TODO: 4/4/2024 Long poll will go here.
+
 
 }
