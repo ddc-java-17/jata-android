@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * This is the domain class that represents {@link Ship} instances in the game. This class will
@@ -34,9 +33,10 @@ public class Ship {
    * @param shipNumber The identifying number of a {@link Ship} on any given {@link Board} instance.
    *                   Every {@code shipNumber} is unique to the {@link Board} instance, but not the
    *                   {@link Game} instance.
-   * @param length The number that indicates the length of a particular {@link Ship}. This also
-   *               indicates the total number of hits the {@code ship} can take, and the type of
-   *               {@code ship} it is as well (Trireme vs Galley vs Canoe; basically flavor text).
+   * @param length     The number that indicates the length of a particular {@link Ship}. This also
+   *                   indicates the total number of hits the {@code ship} can take, and the type of
+   *                   {@code ship} it is as well (Trireme vs Galley vs Canoe; basically flavor
+   *                   text).
    */
   public Ship(int length) {
     this.length = length;
@@ -104,4 +104,14 @@ public class Ship {
   public void setVertical(boolean vertical) {
     this.vertical = vertical;
   }
+
+  public Boolean includesPoint(int gridX, int gridY) {
+   return vertical
+       ? x == gridX && gridY >= y && gridY < y + length
+       : y == gridY && gridX >= x && gridX < x + length;
+
+  }
+
 }
+
+

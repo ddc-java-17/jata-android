@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.jata.controller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import edu.cnm.deepdive.jata.databinding.FragmentBoardBinding;
+import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
 import java.util.List;
 
 public class BoardFragment extends Fragment {
 
+  private static final String TAG = BoardFragment.class.getSimpleName();
   public static final String BOARD_INDEX_KEY = "board_index";
 
   private FragmentBoardBinding binding;
@@ -32,6 +35,8 @@ public class BoardFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater,
       @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     binding = FragmentBoardBinding.inflate(inflater, container, false);
+    binding.gameBoard.setClickListener((gridX, gridY, ship) -> Log.d(TAG, String.format("clicked: %1$d, %2$d, %3$s", gridX, gridY, ship)));
+    binding.gameBoard.setLongClickListener((gridX, gridY, viewX, viewY, ship) -> Log.d(TAG, String.format("longClicked: %1$d, %2$d, %4$f, %5$f, %3$s", gridX, gridY, ship, viewX, viewY)));
     // TODO: 4/3/2024 attach any listeners as needed.
     return binding.getRoot();
   }
