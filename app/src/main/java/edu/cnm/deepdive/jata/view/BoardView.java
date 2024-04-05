@@ -4,25 +4,35 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewConfiguration;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import edu.cnm.deepdive.jata.R;
+import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
-import edu.cnm.deepdive.jata.model.Board;
 
-public class BoardView extends View {
+public class BoardView extends View implements OnTouchListener {
+
+  private static final long LONG_CLICK_DURATION = ViewConfiguration.getLongPressTimeout();
+  private static final int MAX_CLICK_RADIUS = 15;
 
   private Board board;
   private int size;
   private Paint gridPaint;
-  private MotionEvent downEvent;
-  private OnClickListener listener;
+  private Paint shipPaint;
+  private float downX;
+  private float downY;
+  private long downTime;
+  private OnClickListener clickListener;
+  private OnLongClickListener longClickListener;
   private float cellWidth;
   private float cellHeight;
   private Drawable smallShip;
@@ -35,6 +45,9 @@ public class BoardView extends View {
     gridPaint = new Paint();
     gridPaint.setColor(Color.GRAY);
     gridPaint.setStrokeWidth(2);
+    shipPaint = new Paint();
+    shipPaint.setColor(Color.MAGENTA);
+    shipPaint.setStyle(Style.FILL);
   }
 
   public BoardView(Context context) {
@@ -75,6 +88,7 @@ public class BoardView extends View {
   @Override
   protected void onDraw(@NonNull Canvas canvas) {
     super.onDraw(canvas);
+    update();
     if (board != null && size > 0) {
       Context context = getContext();
       loadResources(context);
@@ -86,37 +100,36 @@ public class BoardView extends View {
 
   public void setBoard(Board board) {
     this.board = board;
-    postInvalidate();
+    update();
   }
 
   public void setSize(int size) {
     this.size = size;
-    float width = getWidth();
-    float height = getHeight();
-    cellWidth = width / size;
-    cellHeight = height / size;
-    if (size > 0) {
-      setOnTouchListener(new OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-          if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            downEvent = event;
-          } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (
-                Math.hypot(event.getX() - downEvent.getX(), event.getY() - downEvent.getY()) < 5
-                    && listener != null) {
-              listener.onClick((int)(downEvent.getY() / cellHeight), (int)(downEvent.getX() / cellWidth));
-            }
-          }
-          return true;
-        }
-      });
-    }
-    postInvalidate();
+    update();
   }
 
-  public void setListener(OnClickListener listener) {
-    this.listener = listener;
+  private void update() {
+    if (size > 0) {
+      float width = getWidth();
+      float height = getHeight();
+      cellWidth = width / size;
+      cellHeight = height / size;
+      postInvalidate();
+      setOnTouchListener(this);
+    }
+  }
+
+  private boolean isCloseEnough(MotionEvent event) {
+    return Math.hypot(event.getX() - downX, event.getY() - downY) < MAX_CLICK_RADIUS;
+  }
+
+  public void setClickListener(OnClickListener clickListener) {
+    this.clickListener = clickListener;
+  }
+
+  public void setLongClickListener(
+      OnLongClickListener longClickListener) {
+    this.longClickListener = longClickListener;
   }
 
   private void drawGrid(Canvas canvas) {
@@ -132,10 +145,29 @@ public class BoardView extends View {
   private void drawShips(Canvas canvas) {
     // TODO: 4/3/2024 invoke drawable.draw (canvas)  to draw ships on canvas.
     for (Ship ship : board.getShips()) {
+      int x = ship.getX();
+      float left = (x - 1) * cellWidth + 20;
+      int y = ship.getY();
+      float top = (y - 1) * cellHeight + 20;
+      float right;
+      float bottom;
+      boolean vertical = ship.isVertical();
+      int length = ship.getLength();
+      if (vertical) {
+        right = x * cellWidth;
+        bottom = (y - 1 + length) * cellHeight;
+      } else {
+        right = (x - 1 + length) * cellWidth;
+        bottom = y * cellHeight;
+      }
+      right -= 20;
+      bottom -= 20;
+      canvas.drawRoundRect(left, top, right, bottom, 20, 20, shipPaint);
+
       // TODO: 4/3/2024 use the ships x and y coords and orientation to select drawable to set bounds
-    largeShip.setBounds((int) ((ship.getX() - 1) * cellWidth), (int) ((ship.getY() -1) * cellHeight),
-        (int) ((ship.getX() - 1 + ship.getLength()) * cellWidth), (int) cellHeight);
-    largeShip.draw(canvas);
+//    largeShip.setBounds((int) ((x - 1) * cellWidth), (int) ((y -1) * cellHeight),
+//        (int) ((x - 1 + length) * cellWidth), (int) cellHeight);
+//    largeShip.draw(canvas);
     }
 
   }
@@ -156,8 +188,44 @@ public class BoardView extends View {
     miss = AppCompatResources.getDrawable(context, R.drawable.miss);
   }
 
-  public interface OnClickListener {
+  private Ship shipAt(int gridX, int gridY) {
+    return board.getShips()
+        .stream()
+        .filter((ship) -> ship.includesPoint(gridX, gridY))
+        .findFirst()
+        .orElse(null);
+  }
 
-    void onClick(int row, int column);
+  @Override
+  public boolean onTouch(View v, MotionEvent event) {
+    boolean handled = false;
+    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+      downX = event.getX();
+      downY = event.getY();
+      downTime = event.getEventTime();
+      handled = true;
+    } else if (event.getAction() == MotionEvent.ACTION_UP && isCloseEnough(event)) {
+      long duration = event.getEventTime() - downTime;
+      int gridX = (int) (downX / cellWidth) + 1;
+      int gridY = (int) (downY / cellHeight) + 1;
+      Ship ship = shipAt(gridX, gridY);
+      if (duration < LONG_CLICK_DURATION) {
+        if (clickListener != null) {
+          clickListener.onClick(gridX, gridY, ship);
+        }
+      } else if (longClickListener != null) {
+        longClickListener.onLongClick(gridX, gridY, event.getX(), event.getY(), ship);
+      }
+      handled = true;
+    }
+    return handled;
+  }
+
+  public interface OnClickListener {
+    void onClick(int gridX, int gridY, Ship ship);
+  }
+
+  public interface OnLongClickListener {
+    void onLongClick(int gridX, int gridY, float viewX, float viewY, Ship ship);
   }
 }
