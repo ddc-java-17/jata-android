@@ -86,7 +86,8 @@ public class JataRepository {
           User user = new User();
           user.setDisplayName("ducky");
           Board board = new Board(user, List.of(), ships, true, false);
-          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board));
+          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
+              false, false);
     })
         .subscribeOn(scheduler);
   }
@@ -96,23 +97,14 @@ public class JataRepository {
         .refreshBearerToken()
         .observeOn(scheduler)
         .flatMap((token) -> proxy.submitShips(game.getKey(), ships, token));
-    // TODO: 4/4/2024 Write code to prevent users from placing ships when we don't want them to.
   }
 
   public Single<List<Shot>> submitShots(List<Shot> shots) {
     return signInService
         .refreshBearerToken()
         .observeOn(scheduler)
-        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token)); // TODO: 4/4/2024 Remove semicolon at the end of this line when we are ready to uncomment the following code.
-//        .flatMap((shots) -> {
-//          board.getShots().add(shot);
-//          return (game.isTurn && (!board.isFleetSunk() && (game.isStart && !game.isFinished)))
-//              ? Single.just(shots)
-//              : // NO SHOTS FOR YOU!!!;
-//        });
-    // TODO: 4/4/2024 prevent people from submitting shots when fleetSunk = true or when game is over.
-    // TODO: 4/4/2024 check to see if less than n-1 fleets are sunk.
-    // TODO: 4/4/2024 prevent people from submitting shots when game is over.
+        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token));
+
   }
 
   public Single<Game> getGame(String key) {

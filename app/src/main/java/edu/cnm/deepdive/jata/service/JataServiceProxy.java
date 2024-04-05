@@ -27,7 +27,7 @@ public interface JataServiceProxy {
       @Header("Authorization") String bearerToken);
 
   // SHIP
-  @POST("games/{gameKey}/ships")
+  @POST("games/{gameKey}/ships") // may be a PUT, talk to Reed bout it. POST does work
   Single<List<Ship>> submitShips(
       @Path("gameKey") String key,
       @Body List<Ship> ships,
