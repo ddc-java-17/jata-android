@@ -42,13 +42,13 @@ public interface JataServiceProxy {
    *                    user is who they say they are.
    * @return {@link Single} task that will return the server's {@code game} object.
    */
-  @GET("games/{gameKey}")
+  @GET("games/{key}")
   Single<Game> getGame(
-      @Path("gameKey") String key,
+      @Path("key") String key,
       @Header("Authorization") String bearerToken);
 
   /**
-   *
+   * This method sends a
    *
    * @param key
    * @param ships
@@ -57,13 +57,13 @@ public interface JataServiceProxy {
    */
   @POST("games/{gameKey}/ships")
   // may be a PUT, talk to Reed bout it when he isn't working on getting the server to build. POST does work
-  Single<List<Ship>> submitShips(
+  Single<Game> submitShips(
       @Path("gameKey") String key,
       @Body List<Ship> ships,
       @Header("Authorization") String bearerToken);
 
   @POST("games/{gameKey}/shots")
-  Single<List<Shot>> submitShots(
+  Single<Game> submitShots(
       @Path("gameKey") String key,
       @Body List<Shot> shots,
       @Header("Authorization") String bearerToken);

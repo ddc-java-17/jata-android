@@ -5,9 +5,13 @@ import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
 import edu.cnm.deepdive.jata.model.entity.User;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,9 +27,13 @@ public class JataRepository {
   private static final String TAG = JataRepository.class.getSimpleName();
 
   private final JataServiceProxy proxy;
+  private final JataLongPollServiceProxy longPollProxy;
   private final UserRepository userRepository;
   private final GoogleSignInService signInService;
   private final Scheduler scheduler;
+  private Subject<Game> gamePoller;
+  private Subject<Throwable> throwablePoller;
+  private CompositeDisposable pending;
   private Game game;
   private Board board;
   private Shot shot;
@@ -40,12 +48,15 @@ public class JataRepository {
    *                       our app and service.
    */
   @Inject
-  JataRepository(JataServiceProxy proxy, UserRepository userRepository,
+  JataRepository(JataServiceProxy proxy, JataLongPollServiceProxy longPollProxy,
+      UserRepository userRepository,
       GoogleSignInService signInService) {
     this.proxy = proxy;
+    this.longPollProxy = longPollProxy;
     this.userRepository = userRepository;
     this.signInService = signInService;
     scheduler = Schedulers.single();
+    pending = new CompositeDisposable();
   }
 
   /**
@@ -59,14 +70,26 @@ public class JataRepository {
    * a new {@link Game} or another instance with the same game preferences with room for another
    * player.
    */
-  public Single<Game> startGame(Game game) {
+  public void startGame(Game game) {
 //    return signInService
 //        .refreshBearerToken()
 //        .observeOn(scheduler)
 //        .flatMap((token) -> proxy.startGame(game, token))
-//        .doOnSuccess(this::setGame);
+//        .doOnSuccess(this::setGame)
+//        .subscribe(
+//            (game) -> {
+//               if (gamePoller != null) {
+//                 gamePoller.onNext(game);
+//               }
+//            },
+//            (throwable) -> {
+//              if (throwablePoller != null) {
+//                throwablePoller.onNext(throwable);
+//              }
+//            },
+//            pending
+//        );
     int[] origin = {1, 1};
-    return Single.fromSupplier(() -> {
           List<Ship> ships = Stream.generate(() -> {
                 int x = origin[0];
                 int y = origin[1];
@@ -84,34 +107,86 @@ public class JataRepository {
           User user = new User();
           user.setDisplayName("ducky");
           Board board = new Board(user, List.of(), ships, true, false);
-          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
-              false,
-              false, false);
-        })
+    updateGame(new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
+        false, false));
+  }
+
+  public void submitShips(List<Ship> ships) {
+    signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .flatMap((token) -> proxy.submitShips(game.getKey(), ships, token))
+        .subscribe(
+            this::updateGame,
+            this::updateThrowable,
+            pending
+        );
+  }
+
+  private void updateThrowable(Throwable throwable) {
+    if (throwablePoller != null) {
+      throwablePoller.onNext(throwable);
+    }
+  }
+
+  public void submitShots(List<Shot> shots) {
+    signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token))
+        .subscribe(
+            this::updateGame,
+            this::updateThrowable,
+            pending
+        );
+
+  }
+
+  public Observable<Game> pollGameStatus(String key) {
+    if (gamePoller != null) {
+      gamePoller.onComplete();
+    }
+    gamePoller = BehaviorSubject.create();
+    return gamePoller
+        .subscribeOn(scheduler)
+        .doOnNext((game) -> {
+          if (game.isStarted() && !game.isFinished() && !game.isYourTurn()) {
+            getGame(game.getKey());
+          }
+        });
+  }
+
+  public Observable<Throwable> pollThrowable() {
+    if (throwablePoller != null) {
+      throwablePoller.onComplete();
+    }
+    throwablePoller = BehaviorSubject.create();
+    return throwablePoller
         .subscribeOn(scheduler);
   }
 
-  public Single<List<Ship>> submitShips(List<Ship> ships) {
-    return signInService
+  private void getGame(String key) {
+    signInService
         .refreshBearerToken()
         .observeOn(scheduler)
-        .flatMap((token) -> proxy.submitShips(game.getKey(), ships, token));
+        .flatMap((token) -> longPollProxy.getGame(key, token))
+        .doOnSuccess(this::setGame)
+        .subscribe(
+            (game) -> {
+              updateGame(game);
+            },
+            (throwable) -> {
+              updateThrowable(throwable);
+            },
+            pending
+        );
   }
 
-  public Single<List<Shot>> submitShots(List<Shot> shots) {
-    return signInService
-        .refreshBearerToken()
-        .observeOn(scheduler)
-        .flatMap((token) -> proxy.submitShots(game.getKey(), shots, token));
-
+  private void updateGame(Game game) {
+    if (gamePoller != null) {
+      gamePoller.onNext(game);
+    }
   }
-
-  public Single<Game> getGame(String key) {
-    return signInService
-        .refreshBearerToken()
-        .flatMap((token) -> proxy.getGame(key, token).doOnSuccess(this::setGame));
-  }
-
 
   private void setGame(Game game) {
     this.game = game;
