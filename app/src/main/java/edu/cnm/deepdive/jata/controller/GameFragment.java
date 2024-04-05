@@ -31,7 +31,7 @@ public class GameFragment extends Fragment {
     GameFragmentArgs gameFragmentArgs = GameFragmentArgs.fromBundle(getArguments());
     boardSize = gameFragmentArgs.getBoardSize();
     playerCount = gameFragmentArgs.getPlayerCount();
-     }
+  }
 
   @Nullable
   @Override
@@ -52,8 +52,10 @@ public class GameFragment extends Fragment {
           BoardsAdapter adapter = new BoardsAdapter(this, game);
           binding.playerBoardsHost.setAdapter(adapter);
           new TabLayoutMediator(binding.playerBoards, binding.playerBoardsHost,
-              (tab, position) -> tab.setText(game.getBoards().get(position).getPlayer().getDisplayName()))
+              (tab, position) -> tab.setText(
+                  game.getBoards().get(position).getPlayer().getDisplayName()))
               .attach();
         });
+    viewModel.pollGame();
   }
 }

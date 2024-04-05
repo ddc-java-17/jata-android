@@ -34,6 +34,9 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     game = new MutableLiveData<>();
     throwable = new MutableLiveData<>();
     pending = new CompositeDisposable();
+    gamePoll = jataRepository.pollGameStatus();
+    throwablePoll = jataRepository.pollThrowable();
+
   }
 
   public LiveData<Game> getGame() {
@@ -49,7 +52,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   }
 
   public void pollGame() {
-    jataRepository.pollGameStatus()
+    gamePoll
         .subscribe(
             game::postValue,
             this::postThrowable,
@@ -59,7 +62,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   }
 
   public void pollThrowable() {
-    jataRepository.pollThrowable()
+    throwablePoll
         .subscribe(
             this::postThrowable,
             this::postThrowable,
@@ -71,8 +74,8 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   @Override
   public void onStart(@NotNull LifecycleOwner owner) {
     DefaultLifecycleObserver.super.onStart(owner);
-    gamePoll = jataRepository.pollGameStatus();
-    throwablePoll = jataRepository.pollThrowable();
+//    gamePoll = jataRepository.pollGameStatus();
+//    throwablePoll = jataRepository.pollThrowable();
   }
 
   @Override
