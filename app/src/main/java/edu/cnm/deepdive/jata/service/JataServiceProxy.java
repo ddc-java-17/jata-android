@@ -8,7 +8,6 @@ import java.util.List;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -18,10 +17,15 @@ import retrofit2.http.Path;
 public interface JataServiceProxy {
 
   /**
-   * This method uses retrofit2 to send an HTTP {@link POST}
+   * This method sends an HTTP {@link POST} request to the server to initialize a {@code game}. The
+   * game object the player sends will have game parameters that the user wants for their game
+   * ({@code boardSize} and {@code playerCount}) and the server will return either a new game object
+   * or a game object that has been created by another player that the current user can join.
    *
-   * @param game
-   * @param bearerToken
+   * @param game        This is the {@link Game} object the user will send containing the preferred
+   *                    parameters for their game.
+   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
+   *                    user is who they say they are.
    * @return
    */
   @POST("games")
@@ -29,13 +33,30 @@ public interface JataServiceProxy {
       @Body Game game,
       @Header("Authorization") String bearerToken);
 
+  /**
+   * This method sends an HTTP {@link GET} request to the server for a particular {@link Game}
+   * object. The server will respond with the {@code game} object with that {@code key}.
+   *
+   * @param key         This is the unique key for the {@code game}.
+   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
+   *                    user is who they say they are.
+   * @return {@link Single} task that will return the server's {@code game} object.
+   */
   @GET("games/{gameKey}")
   Single<Game> getGame(
       @Path("gameKey") String key,
       @Header("Authorization") String bearerToken);
 
-  // SHIP
-  @POST("games/{gameKey}/ships") // may be a PUT, talk to Reed bout it when he isn't working on getting the server to build. POST does work
+  /**
+   *
+   *
+   * @param key
+   * @param ships
+   * @param bearerToken
+   * @return
+   */
+  @POST("games/{gameKey}/ships")
+  // may be a PUT, talk to Reed bout it when he isn't working on getting the server to build. POST does work
   Single<List<Ship>> submitShips(
       @Path("gameKey") String key,
       @Body List<Ship> ships,
