@@ -38,15 +38,7 @@ public class JataRepository {
   private Board board;
   private Shot shot;
 
-  /**
-   * This constructor initializes
-   *
-   * @param proxy          This is {@link JataServiceProxy} and its job is to talk to the server
-   *                       when it is asked to.
-   * @param userRepository this...
-   * @param signInService  This is {@link GoogleSignInService} and it allows our users to log into
-   *                       our app and service.
-   */
+
   @Inject
   JataRepository(JataServiceProxy proxy, JataLongPollServiceProxy longPollProxy,
       UserRepository userRepository,
@@ -66,9 +58,6 @@ public class JataRepository {
    * to the service.
    *
    * @param game A {@link Game} object.
-   * @return {@link Single<Game>} A single {@link Game} object that the user can join whether it is
-   * a new {@link Game} or another instance with the same game preferences with room for another
-   * player.
    */
   public void startGame(Game game) {
 //    return signInService
