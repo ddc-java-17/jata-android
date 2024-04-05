@@ -8,9 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.google.android.material.tabs.TabLayout.Tab;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.adapter.BoardsAdapter;
 import edu.cnm.deepdive.jata.databinding.FragmentGameBinding;
@@ -56,6 +54,6 @@ public class GameFragment extends Fragment {
                   game.getBoards().get(position).getPlayer().getDisplayName()))
               .attach();
         });
-    viewModel.pollGame();
   }
+
 }
