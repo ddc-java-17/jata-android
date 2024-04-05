@@ -10,9 +10,11 @@ import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.service.JataRepository;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javax.inject.Inject;
+import org.jetbrains.annotations.NotNull;
 
 @HiltViewModel
 public class GameViewModel extends ViewModel implements DefaultLifecycleObserver {
@@ -23,6 +25,8 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   private final MutableLiveData<Game> game;
   private final MutableLiveData<Throwable> throwable;
   private final CompositeDisposable pending;
+  private Observable<Game> gamePoll;
+  private Observable<Throwable> throwablePoll;
 
   @Inject
   public GameViewModel(JataRepository jataRepository) {
@@ -41,18 +45,40 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   }
 
   public void startGame(int boardSize, int playerCount) {
-    Single.fromSupplier(() -> new Game(boardSize, playerCount))
-        .flatMap(jataRepository::startGame)
+    jataRepository.startGame(new Game(boardSize, playerCount));
+  }
+
+  public void pollGame() {
+    jataRepository.pollGameStatus()
         .subscribe(
             game::postValue,
             this::postThrowable,
+            () -> {},
+            pending
+        );
+  }
+
+  public void pollThrowable() {
+    jataRepository.pollThrowable()
+        .subscribe(
+            this::postThrowable,
+            this::postThrowable,
+            () -> {},
             pending
         );
   }
 
   @Override
+  public void onStart(@NotNull LifecycleOwner owner) {
+    DefaultLifecycleObserver.super.onStart(owner);
+    gamePoll = jataRepository.pollGameStatus();
+    throwablePoll = jataRepository.pollThrowable();
+  }
+
+  @Override
   public void onStop(@NonNull LifecycleOwner owner) {
     pending.clear();
+    jataRepository.stopPolling();
     DefaultLifecycleObserver.super.onStop(owner);
   }
 

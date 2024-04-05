@@ -142,7 +142,7 @@ public class JataRepository {
 
   }
 
-  public Observable<Game> pollGameStatus(String key) {
+  public Observable<Game> pollGameStatus() {
     if (gamePoller != null) {
       gamePoller.onComplete();
     }
@@ -163,6 +163,11 @@ public class JataRepository {
     throwablePoller = BehaviorSubject.create();
     return throwablePoller
         .subscribeOn(scheduler);
+  }
+
+  public void stopPolling() {
+    gamePoller.onComplete();
+    throwablePoller.onComplete();
   }
 
   private void getGame(String key) {
