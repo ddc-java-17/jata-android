@@ -3,16 +3,14 @@ package edu.cnm.deepdive.jata.service;
 import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.model.Ship;
-import edu.cnm.deepdive.jata.model.entity.User;
-import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
+import edu.cnm.deepdive.jata.model.entity.User;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.List;
 import javax.inject.Inject;
 
 /**
@@ -67,28 +65,29 @@ public class JataRepository {
 //        .observeOn(scheduler)
 //        .flatMap((token) -> proxy.startGame(game, token))
 //        .doOnSuccess(this::setGame);
-    int[] origin = {1,1};
+    int[] origin = {1, 1};
     return Single.fromSupplier(() -> {
-         List<Ship> ships = Stream.generate(() -> {
-            int x = origin[0] ;
+          List<Ship> ships = Stream.generate(() -> {
+                int x = origin[0];
                 int y = origin[1];
-            boolean vertical = (x < y);
-            int length = 3;
-            if (vertical) {
-              origin[0]++;
-            } else {
-              origin[1]++;
-            }
-            return new Ship(x, y, length, vertical);
-          })
+                boolean vertical = (x < y);
+                int length = 3;
+                if (vertical) {
+                  origin[0]++;
+                } else {
+                  origin[1]++;
+                }
+                return new Ship(x, y, length, vertical);
+              })
               .limit(4)
               .collect(Collectors.toList());
           User user = new User();
           user.setDisplayName("ducky");
           Board board = new Board(user, List.of(), ships, true, false);
-          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false, false,
+          return new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
+              false,
               false, false);
-    })
+        })
         .subscribeOn(scheduler);
   }
 
