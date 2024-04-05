@@ -22,6 +22,7 @@ import edu.cnm.deepdive.jata.model.Shot;
 public class BoardView extends View implements OnTouchListener {
 
   private static final long LONG_CLICK_DURATION = ViewConfiguration.getLongPressTimeout();
+  private static final int MAX_CLICK_RADIUS = 15;
 
   private Board board;
   private int size;
@@ -119,7 +120,7 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   private boolean isCloseEnough(MotionEvent event) {
-    return Math.hypot(event.getX() - downX, event.getY() - downY) < 5;
+    return Math.hypot(event.getX() - downX, event.getY() - downY) < MAX_CLICK_RADIUS;
   }
 
   public void setClickListener(OnClickListener clickListener) {
@@ -221,12 +222,10 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   public interface OnClickListener {
-
     void onClick(int gridX, int gridY, Ship ship);
   }
 
   public interface OnLongClickListener {
-
     void onLongClick(int gridX, int gridY, float viewX, float viewY, Ship ship);
   }
 }

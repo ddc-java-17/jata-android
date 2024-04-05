@@ -105,11 +105,10 @@ public class Ship {
     this.vertical = vertical;
   }
 
-  public Boolean includesPoint(int gridX, int gridY) {
+  public boolean includesPoint(int gridX, int gridY) {
    return vertical
        ? x == gridX && gridY >= y && gridY < y + length
        : y == gridY && gridX >= x && gridX < x + length;
-
   }
 
 }
