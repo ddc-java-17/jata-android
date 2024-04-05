@@ -7,7 +7,6 @@ import edu.cnm.deepdive.jata.model.Shot;
 import edu.cnm.deepdive.jata.model.entity.User;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -60,42 +59,34 @@ public class JataRepository {
    * @param game A {@link Game} object.
    */
   public void startGame(Game game) {
-//    return signInService
+//    signInService
 //        .refreshBearerToken()
 //        .observeOn(scheduler)
 //        .flatMap((token) -> proxy.startGame(game, token))
 //        .doOnSuccess(this::setGame)
 //        .subscribe(
-//            (game) -> {
-//               if (gamePoller != null) {
-//                 gamePoller.onNext(game);
-//               }
-//            },
-//            (throwable) -> {
-//              if (throwablePoller != null) {
-//                throwablePoller.onNext(throwable);
-//              }
-//            },
+//    this::updateGame,
+//        this::updateThrowable,
 //            pending
 //        );
     int[] origin = {1, 1};
-          List<Ship> ships = Stream.generate(() -> {
-                int x = origin[0];
-                int y = origin[1];
-                boolean vertical = (x < y);
-                int length = 3;
-                if (vertical) {
-                  origin[0]++;
-                } else {
-                  origin[1]++;
-                }
-                return new Ship(x, y, length, vertical);
-              })
-              .limit(4)
-              .collect(Collectors.toList());
-          User user = new User();
-          user.setDisplayName("ducky");
-          Board board = new Board(user, List.of(), ships, true, false);
+    List<Ship> ships = Stream.generate(() -> {
+          int x = origin[0];
+          int y = origin[1];
+          boolean vertical = (x < y);
+          int length = 3;
+          if (vertical) {
+            origin[0]++;
+          } else {
+            origin[1]++;
+          }
+          return new Ship(x, y, length, vertical);
+        })
+        .limit(4)
+        .collect(Collectors.toList());
+    User user = new User();
+    user.setDisplayName("ducky");
+    Board board = new Board(user, List.of(), ships, true, false);
     updateGame(new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
         false, false));
   }
@@ -112,11 +103,6 @@ public class JataRepository {
         );
   }
 
-  private void updateThrowable(Throwable throwable) {
-    if (throwablePoller != null) {
-      throwablePoller.onNext(throwable);
-    }
-  }
 
   public void submitShots(List<Shot> shots) {
     signInService
@@ -159,6 +145,50 @@ public class JataRepository {
     throwablePoller.onComplete();
   }
 
+  public void changePlacement(List<Ship> ships, int boardIndex) {
+    if (isPlacementValid(ships)) {
+      List<Ship> boardShips = game.getBoards().get(boardIndex).getShips();
+      boardShips.clear();
+      boardShips.addAll(ships);
+    } else {
+      throwablePoller.onNext(new InvalidShipPlacementException());
+    }
+    gamePoller.onNext(game);
+  }
+
+  public boolean isPlacementValid(List<Ship> ships) {
+    int size = game.getBoardSize();
+    boolean[][] placement = new boolean[size][size];
+    boolean valid = true;
+    outer:
+    for (Ship ship : ships) {
+      int x = ship.getX();
+      int y = ship.getY();
+      int length = ship.getLength();
+      boolean vertical = ship.isVertical();
+      if (x < 1 || y < 1
+          || (vertical && y + length > size + 1)
+          || (!vertical && x + length > size + 1)) {
+        valid = false;
+        break outer;
+      }
+      int stepX = vertical ? 0 : 1; // this is an invariant that lives outside the loop
+      int stepY = vertical ? 1 : 0; // this is too.
+      for (
+          int checkY = y - 1, checkX = x - 1, step = 0;
+          step < length;
+          checkY += stepY, checkX += stepX, step++
+      ) {
+        if (placement[y][x]) {
+          valid = false;
+          break outer;
+        }
+        placement[y][x] = true;
+      }
+    }
+    return valid;
+  }
+
   private void getGame(String key) {
     signInService
         .refreshBearerToken()
@@ -166,12 +196,8 @@ public class JataRepository {
         .flatMap((token) -> longPollProxy.getGame(key, token))
         .doOnSuccess(this::setGame)
         .subscribe(
-            (game) -> {
-              updateGame(game);
-            },
-            (throwable) -> {
-              updateThrowable(throwable);
-            },
+            this::updateGame,
+            this::updateThrowable,
             pending
         );
   }
@@ -182,8 +208,33 @@ public class JataRepository {
     }
   }
 
+  private void updateThrowable(Throwable throwable) {
+    if (throwablePoller != null) {
+      throwablePoller.onNext(throwable);
+    }
+  }
+
   private void setGame(Game game) {
     this.game = game;
+  }
+
+  public static class InvalidShipPlacementException extends IllegalArgumentException {
+
+    public InvalidShipPlacementException() {
+      super();
+    }
+
+    public InvalidShipPlacementException(String message) {
+      super(message);
+    }
+
+    public InvalidShipPlacementException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+    public InvalidShipPlacementException(Throwable cause) {
+      super(cause);
+    }
   }
 
 }
