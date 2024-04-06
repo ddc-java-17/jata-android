@@ -5,10 +5,7 @@ import edu.cnm.deepdive.jata.model.entity.User;
 
 public class Shot {
 
-  @Expose(serialize = false, deserialize = true)
-  private final String key;
-
-  @Expose
+  @Expose(serialize = true, deserialize = false)
   private final User toUser;
 
   @Expose
@@ -18,19 +15,10 @@ public class Shot {
   private final int y;
 
 
-  public Shot(String key, User toUser, int x, int y) {
-    this.key = key;
+  public Shot(User toUser, int x, int y) {
     this.toUser = toUser;
     this.x = x;
     this.y = y;
-  }
-
-  public Shot(User toUser, int x, int y) {
-    this(null, toUser, x, y);
-  }
-
-  public String getKey() {
-    return key;
   }
 
   public int getX() {

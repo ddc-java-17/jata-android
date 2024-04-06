@@ -61,8 +61,11 @@ public class BoardFragment extends Fragment {
           if (!board.isPlaced() && board.isMine()) {
             binding.placeShips.setVisibility(View.VISIBLE);
             binding.gameBoard.setLongClickListener(this::handleLongClick);
-          } else if (!board.isMine() && game.isYourTurn()) {
+          } else if (game.isYourTurn()) {
             binding.placeShips.setVisibility(View.GONE);
+            binding.gameBoard.setClickListener((gridX, gridY, ship) -> {
+
+            });
             // TODO: 4/6/2024 attach click listener for placing shots.
           }
         });
