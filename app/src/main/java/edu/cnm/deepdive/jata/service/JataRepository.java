@@ -4,7 +4,6 @@ import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
-import edu.cnm.deepdive.jata.model.entity.User;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -12,8 +11,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 
 /**
@@ -59,38 +56,38 @@ public class JataRepository {
    * @param game A {@link Game} object.
    */
   public void startGame(Game game) {
-//    signInService
-//        .refreshBearerToken()
-//        .observeOn(scheduler)
-//        .flatMap((token) -> proxy.startGame(game, token))
-//        .doOnSuccess(this::setGame)
-//        .subscribe(
-//    this::updateGame,
-//        this::updateThrowable,
-//            pending
-//        );
-    int[] origin = {1, 1};
-    List<Ship> ships = Stream.generate(() -> {
-          int x = origin[0];
-          int y = origin[1];
-          boolean vertical = (x < y);
-          int length = 3;
-          if (vertical) {
-            origin[0]++;
-          } else {
-            origin[1]++;
-          }
-          return new Ship(x, y, length, vertical);
-        })
-        .limit(4)
-        .collect(Collectors.toList());
-    User user = new User();
-    user.setDisplayName("ducky");
-    user.setKey(""); // FIXME: 4/6/2024 use the current users key
-    Board board = new Board(user, List.of(), ships, false, false);
-    this.game = new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
-        false, false);
-    updateGame(this.game);
+    signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .flatMap((token) -> proxy.startGame(game, token))
+        .doOnSuccess(this::setGame)
+        .subscribe(
+            this::updateGame,
+            this::updateThrowable,
+            pending
+        );
+//    int[] origin = {1, 1};
+//    List<Ship> ships = Stream.generate(() -> {
+//          int x = origin[0];
+//          int y = origin[1];
+//          boolean vertical = (x < y);
+//          int length = 3;
+//          if (vertical) {
+//            origin[0]++;
+//          } else {
+//            origin[1]++;
+//          }
+//          return new Ship(x, y, length, vertical);
+//        })
+//        .limit(4)
+//        .collect(Collectors.toList());
+//    User user = new User();
+//    user.setDisplayName("ducky");
+//    user.setKey(""); // FIXME: 4/6/2024 use the current users key
+//    Board board = new Board(user, List.of(), ships, false, false);
+//    this.game = new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
+//        false, false);
+//    updateGame(this.game);
   }
 
   public void submitShips(List<Ship> ships) {
@@ -127,10 +124,10 @@ public class JataRepository {
     return gamePoller
         .subscribeOn(scheduler)
         .flatMapSingle((game) -> userRepository.getCurrent()
-            .doOnSuccess((user) -> game.getBoards().forEach((board) ->
-                board.setMine(true))) // FIXME: 4/6/2024
+                .doOnSuccess((user) -> game.getBoards().forEach((board) ->
+                    board.setMine(true))) // FIXME: 4/6/2024
 //            board.setMine(user.getKey().equals(board.getPlayer().getKey()))))
-            .map((user) -> game)
+                .map((user) -> game)
         )
         .doOnNext((game) -> {
           if (game.isStarted() && !game.isFinished() && !game.isYourTurn()) {
