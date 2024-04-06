@@ -22,6 +22,7 @@ public class Ship {
 
   @Expose
   private boolean vertical;
+  private boolean selected;
 
   /**
    * This constructor initializes the fields in {@link Ship}.
@@ -110,6 +111,14 @@ public class Ship {
    */
   public void setVertical(boolean vertical) {
     this.vertical = vertical;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
   }
 
   public boolean includesPoint(int gridX, int gridY) {

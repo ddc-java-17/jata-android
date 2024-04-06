@@ -16,6 +16,8 @@ public class Board {
   private final boolean placed;
   @Expose
   private final boolean fleetSunk;
+  @Expose
+  private boolean mine;
 
 
   public Board(User player, List<Shot> shots, List<Ship> ships, boolean placed, boolean fleetSunk) {
@@ -45,4 +47,14 @@ public class Board {
   public boolean isFleetSunk() {
     return fleetSunk;
   }
+
+  public boolean isMine() {
+    return mine;
+  }
+
+  public void setMine(boolean mine) {
+    this.mine = mine;
+  }
 }
+
+

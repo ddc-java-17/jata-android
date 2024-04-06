@@ -78,6 +78,10 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     jataRepository.changePlacement(ships, boardIndex);
   }
 
+  public void changePlacement(List<Ship> ships, int boardIndex, Ship ship) {
+    jataRepository.changePlacement(ships, boardIndex, ship);
+  }
+
   @Override
   public void onStart(@NotNull LifecycleOwner owner) {
     DefaultLifecycleObserver.super.onStart(owner);
