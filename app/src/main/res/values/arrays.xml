@@ -3,14 +3,14 @@
 
   <string-array name="board_size_names">
     <item>Small (8x8)</item>
-    <item>Medium (9x9)</item>
-    <item>Large (10x10)</item>
+    <item>Medium (10x10)</item>
+    <item>Large (12x12)</item>
   </string-array>
 
   <integer-array name="board_size_values">
     <item>8</item>
-    <item>9</item>
     <item>10</item>
+    <item>12</item>
   </integer-array>
 
   <string-array name="player_count">
