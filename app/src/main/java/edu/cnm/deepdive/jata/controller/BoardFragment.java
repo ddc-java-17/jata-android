@@ -44,7 +44,8 @@ public class BoardFragment extends Fragment {
       @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     binding = FragmentBoardBinding.inflate(inflater, container, false);
     binding.gameBoard.setClickListener((gridX, gridY, ship) -> Log.d(TAG, String.format("clicked: %1$d, %2$d, %3$s", gridX, gridY, ship)));
-    binding.gameBoard.setLongClickListener(this::handleLongClick);
+    binding.gameBoard.setLongClickListener(
+        this::handleLongClick);
     // TODO: 4/3/2024 attach any listeners as needed.
     return binding.getRoot();
   }
