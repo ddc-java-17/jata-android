@@ -15,7 +15,7 @@ public class Game {
   @Expose
   private final int playerCount;
 
-  @Expose
+  @Expose(serialize = false, deserialize = true)
   private final List<Board> boards;
 
   @Expose(serialize = false, deserialize = true)
