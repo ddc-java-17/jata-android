@@ -86,7 +86,8 @@ public class JataRepository {
         .collect(Collectors.toList());
     User user = new User();
     user.setDisplayName("ducky");
-    Board board = new Board(user, List.of(), ships, true, false);
+    user.setKey(""); // FIXME: 4/6/2024 use the current users key
+    Board board = new Board(user, List.of(), ships, false, false);
     this.game = new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
         false, false);
     updateGame(this.game);
@@ -125,6 +126,12 @@ public class JataRepository {
     gamePoller = BehaviorSubject.create();
     return gamePoller
         .subscribeOn(scheduler)
+        .flatMapSingle((game) -> userRepository.getCurrent()
+            .doOnSuccess((user) -> game.getBoards().forEach((board) ->
+                board.setMine(true))) // FIXME: 4/6/2024
+//            board.setMine(user.getKey().equals(board.getPlayer().getKey()))))
+            .map((user) -> game)
+        )
         .doOnNext((game) -> {
           if (game.isStarted() && !game.isFinished() && !game.isYourTurn()) {
             getGame(game.getKey());
@@ -153,6 +160,18 @@ public class JataRepository {
       boardShips.addAll(ships);
     } else {
       throwablePoller.onNext(new InvalidShipPlacementException());
+    }
+    gamePoller.onNext(game);
+  }
+
+  public void changePlacement(List<Ship> ships, int boardIndex, Ship ship) {
+    if (isPlacementValid(ships)) {
+      List<Ship> boardShips = game.getBoards().get(boardIndex).getShips();
+      boardShips.clear();
+      boardShips.addAll(ships);
+    } else {
+      ship.setVertical(!ship.isVertical());
+      changePlacement(ships, boardIndex);
     }
     gamePoller.onNext(game);
   }

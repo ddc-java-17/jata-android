@@ -28,6 +28,7 @@ public class BoardView extends View implements OnTouchListener {
   private int size;
   private Paint gridPaint;
   private Paint shipPaint;
+  private Paint selectedShipPaint;
   private float downX;
   private float downY;
   private long downTime;
@@ -48,6 +49,10 @@ public class BoardView extends View implements OnTouchListener {
     shipPaint = new Paint();
     shipPaint.setColor(Color.MAGENTA);
     shipPaint.setStyle(Style.FILL);
+    selectedShipPaint = new Paint();
+    selectedShipPaint.setColor(Color.BLACK);
+    selectedShipPaint.setStyle(Style.STROKE);
+    selectedShipPaint.setStrokeWidth(4);
   }
 
   public BoardView(Context context) {
@@ -163,7 +168,9 @@ public class BoardView extends View implements OnTouchListener {
       right -= 20;
       bottom -= 20;
       canvas.drawRoundRect(left, top, right, bottom, 20, 20, shipPaint);
-
+      if (ship.isSelected()) {
+        canvas.drawRoundRect(left, top, right, bottom, 20, 20, selectedShipPaint);
+      }
       // TODO: 4/3/2024 use the ships x and y coords and orientation to select drawable to set bounds
 //    largeShip.setBounds((int) ((x - 1) * cellWidth), (int) ((y -1) * cellHeight),
 //        (int) ((x - 1 + length) * cellWidth), (int) cellHeight);
@@ -213,7 +220,7 @@ public class BoardView extends View implements OnTouchListener {
         if (clickListener != null) {
           clickListener.onClick(gridX, gridY, ship);
         }
-      } else if (longClickListener != null) {
+      } else if (longClickListener != null && ship != null) {
         longClickListener.onLongClick(gridX, gridY, event.getX(), event.getY(), ship);
       }
       handled = true;
