@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.jata.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import edu.cnm.deepdive.jata.model.entity.User;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class Board {
   @Expose
   private final User player;
   @Expose
+  @SerializedName("toShots")
   private final List<Shot> shots;
   @Expose
   private final List<Ship> ships;

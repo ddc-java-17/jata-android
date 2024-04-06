@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback;
 import com.google.android.material.tabs.TabLayoutMediator;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.adapter.BoardsAdapter;
@@ -21,6 +22,7 @@ public class GameFragment extends Fragment {
   private GameViewModel viewModel;
   private int boardSize;
   private int playerCount;
+  private int currentBoardIndex;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class GameFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
+    binding.playerBoardsHost.registerOnPageChangeCallback(new BoardChangeListener());
     // where we add listeners and configure view widgets.
 
     return binding.getRoot();
@@ -49,11 +52,22 @@ public class GameFragment extends Fragment {
         .observe(getViewLifecycleOwner(), (game) -> {
           BoardsAdapter adapter = new BoardsAdapter(this, game);
           binding.playerBoardsHost.setAdapter(adapter);
+          binding.playerBoardsHost.setCurrentItem(currentBoardIndex);
           new TabLayoutMediator(binding.playerBoards, binding.playerBoardsHost,
               (tab, position) -> tab.setText(
                   game.getBoards().get(position).getPlayer().getDisplayName()))
               .attach();
         });
+  }
+
+  private class BoardChangeListener extends OnPageChangeCallback {
+
+    @Override
+    public void onPageSelected(int position) {
+      super.onPageSelected(position);
+      currentBoardIndex = position;
+    }
+
   }
 
 }
