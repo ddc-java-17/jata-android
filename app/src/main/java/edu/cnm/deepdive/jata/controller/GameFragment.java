@@ -3,6 +3,7 @@ package edu.cnm.deepdive.jata.controller;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,7 @@ public class GameFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
     binding.playerBoardsHost.registerOnPageChangeCallback(new BoardChangeListener());
+    binding.fireButton.setOnClickListener((v) -> viewModel.submitShots());
     // where we add listeners and configure view widgets.
 
     return binding.getRoot();
@@ -58,7 +60,7 @@ public class GameFragment extends Fragment {
                   game.getBoards().get(position).getPlayer().getDisplayName()))
               .attach();
         });
-  }
+    }
 
   private class BoardChangeListener extends OnPageChangeCallback {
 
