@@ -22,6 +22,7 @@ public class Ship {
 
   @Expose
   private boolean vertical;
+
   private boolean selected;
 
   /**

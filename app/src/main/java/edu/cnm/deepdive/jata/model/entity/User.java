@@ -45,7 +45,6 @@ public class User {
 
   @Expose
   private String key;
-  // TODO: 4/4/2024 figure out if I need to have this field here, make it final or not, etc.
 
   @NonNull
   private Instant created = Instant.MIN;
