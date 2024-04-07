@@ -34,7 +34,14 @@ public class JataRepository {
   private Board board;
   private Shot shot;
 
-
+  /**
+   * This constructor initializes the final fields of this class.
+   *
+   * @param proxy
+   * @param longPollProxy
+   * @param userRepository
+   * @param signInService
+   */
   @Inject
   JataRepository(JataServiceProxy proxy, JataLongPollServiceProxy longPollProxy,
       UserRepository userRepository,

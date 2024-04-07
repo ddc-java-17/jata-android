@@ -58,8 +58,6 @@ public class User {
   @Expose
   private String displayName = "";
 
-  // TODO Define additional fields as appropriate.
-
   /**
    * Returns the auto-generated unique identifier of this instance.
    */
