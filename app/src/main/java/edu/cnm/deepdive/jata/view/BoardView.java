@@ -228,11 +228,15 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   private Ship shipAt(int gridX, int gridY) {
-    return board.getShips()
-        .stream()
-        .filter((ship) -> ship.includesPoint(gridX, gridY))
-        .findFirst()
-        .orElse(null);
+    if (board.isMine()) {
+      return board.getShips()
+          .stream()
+          .filter((ship) -> ship.includesPoint(gridX, gridY))
+          .findFirst()
+          .orElse(null);
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -247,14 +251,15 @@ public class BoardView extends View implements OnTouchListener {
       long duration = event.getEventTime() - downTime;
       int gridX = (int) (downX / cellWidth) + 1;
       int gridY = (int) (downY / cellHeight) + 1;
-      Ship ship = shipAt(gridX, gridY);
-      if (duration < LONG_CLICK_DURATION) {
-        if (clickListener != null) {
-          clickListener.onClick(gridX, gridY, ship);
+        Ship ship = shipAt(gridX, gridY);
+        if (duration < LONG_CLICK_DURATION) {
+          if (clickListener != null) {
+            clickListener.onClick(gridX, gridY, ship);
+          }
+        } else if (longClickListener != null && ship != null) {
+          longClickListener.onLongClick(gridX, gridY, event.getX(), event.getY(), ship);
         }
-      } else if (longClickListener != null && ship != null) {
-        longClickListener.onLongClick(gridX, gridY, event.getX(), event.getY(), ship);
-      }
+
       handled = true;
     }
     return handled;
