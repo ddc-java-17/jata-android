@@ -61,14 +61,20 @@ public class BoardFragment extends Fragment {
           if (!board.isPlaced() && board.isMine()) {
             binding.placeShips.setVisibility(View.VISIBLE);
             binding.gameBoard.setLongClickListener(this::handleLongClick);
-          } else if (game.isYourTurn()) {
+            binding.placeShips.setOnClickListener((v) -> viewModel.submitShips(boardIndex));
+//          } else if (game.isYourTurn()) {
+          } else {
             binding.placeShips.setVisibility(View.GONE);
             binding.gameBoard.setClickListener((gridX, gridY, ship) -> {
-
+              viewModel.toggleShots(boardIndex, gridX, gridY);
             });
-            // TODO: 4/6/2024 attach click listener for placing shots.
           }
         });
+    viewModel.getPendingShots()
+            .observe(getViewLifecycleOwner(), (shotMap) -> {
+              boolean[][] pendingShots = shotMap.get(boardIndex);
+              binding.gameBoard.setShots(pendingShots);
+            });
     viewModel.getThrowable()
         .observe(getViewLifecycleOwner(), (throwable) ->
             Toast.makeText(requireContext(), throwable.toString(), Toast.LENGTH_LONG).show());

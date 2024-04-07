@@ -39,6 +39,8 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   private Observable<Game> gamePoll;
   private Observable<Throwable> throwablePoll;
   private final MutableLiveData<Map<Integer, boolean[][]>> pendingShots;
+  private int shotLimit;
+  private int shotCounter;
 
   @Inject
   public GameViewModel(JataRepository jataRepository) {
@@ -57,6 +59,10 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     return game;
   }
 
+  public LiveData<Map<Integer, boolean[][]>> getPendingShots() {
+    return pendingShots;
+  }
+
   public LiveData<Throwable> getThrowable() {
     return throwable;
   }
@@ -68,9 +74,15 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   public void pollGame() {
     gamePoll
         .subscribe(
-            game::postValue,
+            (game) -> {
+              this.game.postValue(game);
+              shotLimit = (int) (game.getBoards().stream()
+                  .filter((board) -> !board.isFleetSunk())
+                  .count() - 1);
+            },
             this::postThrowable,
-            () -> {},
+            () -> {
+            },
             pending
         );
   }
@@ -80,7 +92,8 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         .subscribe(
             this::postThrowable,
             this::postThrowable,
-            () -> {},
+            () -> {
+            },
             pending
         );
   }
@@ -93,17 +106,32 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     jataRepository.changePlacement(ships, boardIndex, ship);
   }
 
-  /** @noinspection DataFlowIssue*/
+  public void submitShips(int boardIndex) {
+    //noinspection DataFlowIssue
+    jataRepository.submitShips(game.getValue().getBoards().get(boardIndex).getShips());
+  }
+
+  /**
+   * @noinspection DataFlowIssue
+   */
   public void toggleShots(int boardIndex, int gridX, int gridY) {
     Map<Integer, boolean[][]> pendingShots = this.pendingShots.getValue();
     int boardSize = game.getValue().getBoardSize();
     boolean[][] boardPendingShots = pendingShots.computeIfAbsent(boardIndex,
-        (index) -> new boolean [boardSize][boardSize]);
-    boardPendingShots[gridY - 1][gridX - 1] = !boardPendingShots[gridY - 1][gridX - 1];
+        (index) -> new boolean[boardSize][boardSize]);
+    if (boardPendingShots[gridY - 1][gridX - 1]) {
+      boardPendingShots[gridY - 1][gridX - 1] = false;
+      shotCounter--;
+    } else if (shotCounter < shotLimit) {
+      boardPendingShots[gridY - 1][gridX - 1] = true;
+      shotCounter++;
+    }
     this.pendingShots.setValue(pendingShots);
   }
 
-  /** @noinspection DataFlowIssue*/
+  /**
+   * @noinspection DataFlowIssue
+   */
   public void submitShots() {
     Map<Integer, boolean[][]> pendingShots = this.pendingShots.getValue();
     List<Board> boards = game.getValue().getBoards();
@@ -123,6 +151,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         })
         .collect(Collectors.toList());
     pendingShots.clear();
+    shotCounter = 0;
     jataRepository.submitShots(shotsToSubmit);
   }
 
