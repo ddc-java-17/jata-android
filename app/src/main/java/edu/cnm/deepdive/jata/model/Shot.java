@@ -14,11 +14,14 @@ public class Shot {
   @Expose
   private final int y;
 
+  @Expose
+  private final boolean isHit;
 
-  public Shot(User toUser, int x, int y) {
+  public Shot(User toUser, int x, int y, boolean isHit) {
     this.toUser = toUser;
     this.x = x;
     this.y = y;
+    this.isHit = isHit;
   }
 
   public int getX() {
@@ -33,4 +36,7 @@ public class Shot {
     return toUser;
   }
 
+  public boolean isHit() {
+    return isHit;
+  }
 }

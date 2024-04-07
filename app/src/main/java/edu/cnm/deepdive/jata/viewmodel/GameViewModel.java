@@ -146,7 +146,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
                 rowIndex[0]++;
                 return IntStream.range(0, row.length)
                     .filter((columnIndex) -> row[columnIndex])
-                    .mapToObj((columnIndex) -> new Shot(user, columnIndex + 1, rowIndex[0]));
+                    .mapToObj((columnIndex) -> new Shot(user, columnIndex + 1, rowIndex[0], false));
               });
         })
         .collect(Collectors.toList());

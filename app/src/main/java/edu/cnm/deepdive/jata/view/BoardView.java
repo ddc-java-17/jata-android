@@ -192,6 +192,12 @@ public class BoardView extends View implements OnTouchListener {
   private void drawShots(Canvas canvas) {
     // TODO: 4/3/2024 use drawable.draw (canvas) to draw each shot on the canvas.
     for (Shot shot : board.getShots()) {
+      if (shot.isHit()) {
+       hit.draw(canvas);
+      }
+      if (!shot.isHit()) {
+        miss.draw(canvas);
+      }
       // TODO: 4/3/2024 use shot x and y coords and isHit method to pick a drawable and set its bounds.
       // TODO: 4/3/2024 invoke draw method on drawable
     }
