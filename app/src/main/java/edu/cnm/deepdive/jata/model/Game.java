@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This domain class organizes data regarding th
+ */
 public class Game {
 
   @Expose(serialize = false, deserialize = true)

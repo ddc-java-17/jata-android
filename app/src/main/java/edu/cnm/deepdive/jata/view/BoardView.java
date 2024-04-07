@@ -26,9 +26,11 @@ public class BoardView extends View implements OnTouchListener {
 
   private Board board;
   private int size;
+  private boolean[][] shots;
   private Paint gridPaint;
   private Paint shipPaint;
   private Paint selectedShipPaint;
+  private Paint pendingShotPaint;
   private float downX;
   private float downY;
   private long downTime;
@@ -53,6 +55,9 @@ public class BoardView extends View implements OnTouchListener {
     selectedShipPaint.setColor(Color.BLACK);
     selectedShipPaint.setStyle(Style.STROKE);
     selectedShipPaint.setStrokeWidth(4);
+    pendingShotPaint = new Paint();
+    pendingShotPaint.setColor(Color.RED);
+    pendingShotPaint.setStyle(Style.FILL);
   }
 
   public BoardView(Context context) {
@@ -100,6 +105,7 @@ public class BoardView extends View implements OnTouchListener {
       drawGrid(canvas);
       drawShips(canvas);
       drawShots(canvas);
+      drawPendingShots(canvas);
     }
   }
 
@@ -111,6 +117,10 @@ public class BoardView extends View implements OnTouchListener {
   public void setSize(int size) {
     this.size = size;
     update();
+  }
+
+  public void setShots(boolean[][] shots) {
+    this.shots = shots;
   }
 
   private void update() {
@@ -184,6 +194,20 @@ public class BoardView extends View implements OnTouchListener {
     for (Shot shot : board.getShots()) {
       // TODO: 4/3/2024 use shot x and y coords and isHit method to pick a drawable and set its bounds.
       // TODO: 4/3/2024 invoke draw method on drawable
+    }
+  }
+
+  private void drawPendingShots(Canvas canvas) {
+    if (shots != null) {
+      for (int rowIndex = 0; rowIndex < shots.length; rowIndex++) {
+        for (int columnIndex = 0; columnIndex < shots[rowIndex].length; columnIndex++) {
+          float centerY = (rowIndex + 0.5F) * cellHeight;
+          if (shots[rowIndex][columnIndex]) {
+            float centerX = (columnIndex + 0.5F) * cellWidth;
+            canvas.drawCircle(centerX, centerY, cellWidth * 0.4F, pendingShotPaint);
+          }
+        }
+      }
     }
   }
 
