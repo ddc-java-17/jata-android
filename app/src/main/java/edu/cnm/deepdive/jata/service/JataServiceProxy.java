@@ -36,7 +36,7 @@ public interface JataServiceProxy {
 
   /**
    * This method sends an HTTP {@link GET} request to the server for a particular {@link Game}
-   * object. The server will respond with the {@code game} object with that {@code key}.
+   * object. The server will respond with a {@link Single} of the {@code game} object with that {@code key}.
    *
    * @param key         This is the unique key for the {@code game}.
    * @param bearerToken This is a randomly generated authentication token we use to confirm that the
@@ -49,7 +49,8 @@ public interface JataServiceProxy {
       @Header("Authorization") String bearerToken);
 
   /**
-   * This method sends a
+   * This method sends a {@link PUT} request to the server to place {@code ships} on the board. The
+   * server will respond with a {@link Single} of the {@code game}
    *
    * @param key
    * @param ships
@@ -67,8 +68,5 @@ public interface JataServiceProxy {
       @Path("gameKey") String key,
       @Body List<Shot> shots,
       @Header("Authorization") String bearerToken);
-
-  // TODO: 4/3/2024 users/me endpoint working first.
-
 
 }
