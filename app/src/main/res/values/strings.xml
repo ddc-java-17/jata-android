@@ -46,5 +46,6 @@
   <string name="rotate">Rotate</string>
   <string name="fire_shots">Fire shots</string>
   <string name="armada_ready_prepare_for_battle">Armada ready, prepare for battle!</string>
+  <string name="shots_remaining">Shots remaining</string>
 
 </resources>
