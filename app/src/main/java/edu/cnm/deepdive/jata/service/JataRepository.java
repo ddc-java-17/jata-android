@@ -35,7 +35,7 @@ public class JataRepository {
   private Shot shot;
 
   /**
-   * This constructor initializes the final fields of this class.
+   * This constructor initializes the final fields of this class. It is injectable
    *
    * @param proxy
    * @param longPollProxy
@@ -132,8 +132,10 @@ public class JataRepository {
         .subscribeOn(scheduler)
         .flatMapSingle((game) -> userRepository.getCurrent()
                 .doOnSuccess((user) -> game.getBoards().forEach((board) ->
-                    board.setMine(true))) // FIXME: 4/6/2024
-//            board.setMine(user.getKey().equals(board.getPlayer().getKey()))))
+//                    board.setMine(true))) // FIXME: 4/6/2024
+//            board.setMine(user.getKey().equals(board.getPlayer().getKey()))
+                    board.isMine()
+                ))
                 .map((user) -> game)
         )
         .doOnNext((game) -> {

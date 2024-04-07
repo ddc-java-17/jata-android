@@ -103,7 +103,9 @@ public class BoardView extends View implements OnTouchListener {
       Context context = getContext();
       loadResources(context);
       drawGrid(canvas);
-      drawShips(canvas);
+      if (board.isMine()) {
+        drawShips(canvas);
+      }
       drawShots(canvas);
       drawPendingShots(canvas);
     }

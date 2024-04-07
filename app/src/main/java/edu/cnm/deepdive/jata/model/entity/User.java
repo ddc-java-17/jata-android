@@ -165,9 +165,13 @@ public class User {
     boolean matched;
     if (obj == this) {
       matched = true;
-    } else if (obj instanceof User) {
-      User other = (User) obj;
-      matched = (id != 0 && other.id != 0 && id == other.id);
+    } else if (obj instanceof User other) {
+      if (id != 0 && other.id != 0 && id == other.id) {
+        matched = true;
+      } else {
+        matched = (oauthKey.equals(other.oauthKey));
+      }
+
     } else {
       matched = false;
     }

@@ -8,12 +8,14 @@ import java.util.List;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
- * This interface is what allows the client or app side logic to speak to the server side logic.
+ * This interface is what allows the client or app side logic to make {@link HTTP} requests to the
+ * server.
  */
 public interface JataServiceProxy {
 
@@ -41,7 +43,7 @@ public interface JataServiceProxy {
    * @param key         This is the unique key for the {@code game}.
    * @param bearerToken This is a randomly generated authentication token we use to confirm that the
    *                    user is who they say they are.
-   * @return {@link Single} task that will return the server's {@code game} object.
+   * @return {@link Single} task that will return the server's {@link Game} object.
    */
   @GET("games/{key}")
   Single<Game> getGame(
@@ -50,12 +52,15 @@ public interface JataServiceProxy {
 
   /**
    * This method sends a {@link PUT} request to the server to place {@code ships} on the board. The
-   * server will respond with a {@link Single} of the {@code game}
+   * server will respond with a {@link Single} of the {@code game}.
    *
-   * @param key
-   * @param ships
-   * @param bearerToken
-   * @return
+   * @param key The unique identifying {@link String} that identifies a particular {@link Game}
+   *            object.
+   * @param ships The {@link List} of {@link Ship} that the player has placed on their board in a
+   *              valid formation.
+   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
+   *                    user is who they say they are.
+   * @return {@link Single} task that will return the server's {@link Game} object.
    */
   @PUT("games/{gameKey}/ships")
   Single<Game> submitShips(
