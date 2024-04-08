@@ -48,7 +48,9 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
    *
    * @param jataRepository JataRepository
    */
-  /** @noinspection DataFlowIssue*/
+  /**
+   * @noinspection DataFlowIssue
+   */
   @Inject
   public GameViewModel(JataRepository jataRepository) {
     this.jataRepository = jataRepository;
@@ -181,9 +183,9 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     jataRepository.submitShips(game.getValue().getBoards().get(boardIndex).getShips());
   }
   /**
-  * Method used to place a shot before firing, on tap it will show a red circle where your shot would
-  * be fired, same spot can be tapped again to remove that shot so it can be placed somewhere else.
-  */
+   * Method used to place a shot before firing, on tap it will show a red circle where your shot would
+   * be fired, same spot can be tapped again to remove that shot so it can be placed somewhere else.
+   */
 
   /**
    * @noinspection DataFlowIssue
@@ -200,16 +202,15 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
       shotCounter.setValue(count - 1);
     } else if (count < limit) {
       boardPendingShots[gridY - 1][gridX - 1] = true;
-      shotCounter.setValue(count +1);
+      shotCounter.setValue(count + 1);
     }
     this.pendingShots.setValue(pendingShots);
   }
+
   /**
    * Method used to submit your shots against other users.
    */
-  /**
-   * @noinspection DataFlowIssue
-   */
+  //@noinspection DataFlowIssue
   public void submitShots() {
     Map<Integer, boolean[][]> pendingShots = this.pendingShots.getValue();
     List<Board> boards = game.getValue().getBoards();
@@ -229,7 +230,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         })
         .collect(Collectors.toList());
     pendingShots.clear();
-    shotCounter = 0;
+    shotCounter.setValue(0);
     jataRepository.submitShots(shotsToSubmit);
   }
 
