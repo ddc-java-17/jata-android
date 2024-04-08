@@ -17,9 +17,9 @@ import javax.inject.Inject;
 import retrofit2.http.PUT;
 
 /**
- * This class is the link between the {@link ViewModel} and the {@link JataServiceProxy} that talks
- * to the server. Its methods are meant to be invoked by the view model, then invoke code that sends
- * the relevant Json packet to the server.
+ * Links the {@link ViewModel} and the {@link JataServiceProxy} that talks to the server. Its
+ * methods are invoked by the view model, then they invoke code that sends the relevant Json
+ * packet to the server.
  */
 public class JataRepository {
 
@@ -50,13 +50,11 @@ public class JataRepository {
   }
 
   /**
-   * This method is part of the bridge between the {@link ViewModel} and the
-   * {@link JataServiceProxy}. When the user taps the Start Game button, it will, through a chain of
-   * events, invoke this method. This method uses {@link GoogleSignInService} to authenticate the
-   * user, and then it invokes the method {@link JataServiceProxy#startGame(Game, String)} to send
-   * the request to the service.
+   * Authenticates a user, invokes the {@link JataServiceProxy#startGame(Game, String)} to send an
+   * HTTP request to the server, and then begins listening for the long poll responses from the
+   * server.
    *
-   * @param game A {@link Game} object.
+   * @param game A {@link Game} object to be sent to the server.
    */
   public void startGame(Game game) {
     signInService
@@ -94,14 +92,11 @@ public class JataRepository {
   }
 
   /**
-   * This is the method that will be invoked by {@link GameViewModel} when a player submits their
-   * ships to the server. It uses {@link GoogleSignInService} to authenticate a user, and then it
-   * invokes the {@link JataServiceProxy#submitShips(String, List, String)} and that will send the
-   * player's {@link List} of {@link Ship} and authentication in a {@link PUT} request to the
-   * service.
+   * Authenticates a user, invokes the {@link JataServiceProxy#submitShips(String, List, String)}
+   * method to send an HTTP request to the server, and then listens for the long poll
+   * responses from the server.
    *
-   * @param ships {@link List} of {@link Ship} objects that will be placed on the board via
-   *              {@link PUT} request.
+   * @param ships {@link List} of {@link Ship} objects that will be sent to the server.
    */
   public void submitShips(List<Ship> ships) {
     signInService
@@ -116,8 +111,8 @@ public class JataRepository {
   }
 
   /**
-   * This is the method that will be invoked by the {@link GameViewModel} when a player submits
-   * their shots to the server. It invokes {@link JataServiceProxy}
+   * Authenticates a user, invokes {@link JataServiceProxy#submitShots(String, List, String)} to
+   * send an HTTP request to the server, then listens for the long poll responses from the server.
    *
    * @param shots
    */
@@ -135,9 +130,9 @@ public class JataRepository {
   }
 
   /**
-   * This method processes the long poll that we use to update our game.
+   * Processes the long poll responses from the server holding a {@link Game} object.
    *
-   * @return
+   * @return Reactive stream of the {@link Game} object that can be subscribed to.
    */
   public Observable<Game> pollGameStatus() {
     if (gamePoller != null) {
@@ -199,7 +194,7 @@ public class JataRepository {
   }
 
   /**
-   * This method validates the placement of ships when a
+   * Validates the placement of ships when a
    *
    * @param ships
    * @return

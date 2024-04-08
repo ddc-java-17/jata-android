@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
@@ -76,16 +75,14 @@ public class User {
   }
 
   /**
-   * Gets the
-   *
-   * @return
+   * Returns the unique key of this instance. This key is what we will send to and from the server.
    */
   public String getKey() {
     return key;
   }
 
   /**
-   *
+   * Sets the unique key of this instance. This key is what we will send to and from the server.
    *
    * @param key
    */
@@ -146,9 +143,6 @@ public class User {
   public void setDisplayName(@NonNull String displayName) {
     this.displayName = displayName;
   }
-
-  // TODO Define additional getters and setters. These must be defined for any additional fields
-  //  mapped to database columns.
 
   /**
    * Computes and returns the {@code int}-valued hash code of this instance. Currently, this
