@@ -47,9 +47,9 @@ public class BoardView extends View implements OnTouchListener {
   private Drawable smallShip;
   private Drawable mediumShip;
   private Drawable largeShip;
-  private Drawable rotatedSmallShip;
-  private Drawable rotatedMediumShip;
-  private Drawable rotatedLargeShip;
+//  private Drawable rotatedSmallShip;
+//  private Drawable rotatedMediumShip;
+//  private Drawable rotatedLargeShip;
   private Drawable hit;
   private Drawable miss;
 
@@ -242,9 +242,9 @@ public class BoardView extends View implements OnTouchListener {
         canvas.drawRoundRect(left, top, right, bottom, 0, 0, selectedShipPaint);
       }
       Drawable shipDrawable = switch (ship.getLength()) {
-        case 2 -> ship.isVertical() ? rotatedSmallShip : smallShip;
-        case 3 -> ship.isVertical() ? rotatedMediumShip : mediumShip;
-        case 4 -> ship.isVertical() ? rotatedLargeShip : largeShip;
+        case 2 -> smallShip;
+        case 3 -> mediumShip;
+        case 4 -> largeShip;
         default -> null;
       };
 
@@ -287,9 +287,9 @@ public class BoardView extends View implements OnTouchListener {
     smallShip = AppCompatResources.getDrawable(context, R.drawable.canoe);
     mediumShip = AppCompatResources.getDrawable(context, R.drawable.galley);
     largeShip = AppCompatResources.getDrawable(context, R.drawable.trireme);
-    rotatedSmallShip = AppCompatResources.getDrawable(context, R.drawable.rotated_canoe);
-    rotatedMediumShip = AppCompatResources.getDrawable(context, R.drawable.rotated_galley);
-    rotatedLargeShip = AppCompatResources.getDrawable(context, R.drawable.rotated_trireme);
+//    rotatedSmallShip = AppCompatResources.getDrawable(context, R.drawable.rotated_canoe);
+//    rotatedMediumShip = AppCompatResources.getDrawable(context, R.drawable.rotated_galley);
+//    rotatedLargeShip = AppCompatResources.getDrawable(context, R.drawable.rotated_trireme);
     hit = AppCompatResources.getDrawable(context, R.drawable.hit);
     miss = AppCompatResources.getDrawable(context, R.drawable.miss);
   }
