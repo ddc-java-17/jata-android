@@ -11,6 +11,10 @@ import androidx.navigation.Navigation;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
 
+/**
+ * This LoseDialogFragment extends DialogFragment and makes a pop-up occur whenever you lose a game,
+ * with an option to navigate back to the home screen to start a new game.
+ */
 public class LoseDialogFragment extends DialogFragment {
 
   private GameViewModel viewModel;
