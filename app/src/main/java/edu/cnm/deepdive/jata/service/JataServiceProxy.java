@@ -75,7 +75,7 @@ public interface JataServiceProxy {
    *                    players or themselves.
    * @param bearerToken Randomly generated authentication token we use to confirm that the user is
    *                    who they say they are.
-   * @return {@link Single} updated {@link Game} object that the server sends back.
+   * @return Reactive stream of a single updated {@link Game} object that the server sends back.
    */
   @POST("games/{gameKey}/shots")
   Single<Game> submitShots(
