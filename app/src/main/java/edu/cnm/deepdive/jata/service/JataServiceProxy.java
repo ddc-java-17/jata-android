@@ -68,6 +68,14 @@ public interface JataServiceProxy {
       @Body List<Ship> ships,
       @Header("Authorization") String bearerToken);
 
+  /**
+   *
+   *
+   * @param key
+   * @param shots
+   * @param bearerToken
+   * @return
+   */
   @POST("games/{gameKey}/shots")
   Single<Game> submitShots(
       @Path("gameKey") String key,

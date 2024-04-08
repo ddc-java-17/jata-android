@@ -12,13 +12,15 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
- * This interface is what allows the client or app side logic to speak to the server side logic.
+ * This interface is what allows the client to regularly request updates to the {@link Game} object.
+ * These long polls allow users to get updates as people fire shots, and it also updates whose turn
+ * it is.
  */
 public interface JataLongPollServiceProxy {
 
   /**
    * This method sends an HTTP {@link GET} request to the server for a particular {@link Game}
-   * object. The server will respond with the {@code game} object with that {@code key}.
+   * object when invoked. The server will respond with the {@link Game} object with that {@code key}.
    *
    * @param key         This is the unique key for the {@code game}.
    * @param bearerToken This is a randomly generated authentication token we use to confirm that the
@@ -29,6 +31,5 @@ public interface JataLongPollServiceProxy {
   Single<Game> getGame(
       @Path("key") String key,
       @Header("Authorization") String bearerToken);
-
 
 }

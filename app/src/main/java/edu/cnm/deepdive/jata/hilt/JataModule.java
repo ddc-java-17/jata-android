@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 import edu.cnm.deepdive.jata.R;
+import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.service.JataLongPollServiceProxy;
 import edu.cnm.deepdive.jata.service.JataServiceProxy;
 import java.time.Duration;
@@ -48,6 +49,14 @@ public final class JataModule {
     return retrofit.create(JataServiceProxy.class);
   }
 
+  /**
+   * This method is a {@link Singleton} that polls the server at regular intervals asking for
+   * updates to the {@link Game}. This allows all players to receive live updates when shots are
+   * fired and when it is the next player's turn.
+   *
+   * @param context
+   * @return
+   */
   @Provides
   @Singleton
   public JataLongPollServiceProxy provideLongPollProxy(@ApplicationContext Context context) {

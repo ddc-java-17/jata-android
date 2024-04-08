@@ -1,9 +1,11 @@
 package edu.cnm.deepdive.jata.service;
 
+import androidx.lifecycle.ViewModel;
 import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Game;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
+import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -12,11 +14,12 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import java.util.List;
 import javax.inject.Inject;
+import retrofit2.http.PUT;
 
 /**
- * This class is the link between the view model and the {@link JataServiceProxy} that talks to the
- * server. Its methods are meant to be invoked by the view model, then invoke code that sends the
- * relevant Json packet to the server.
+ * This class is the link between the {@link ViewModel} and the {@link JataServiceProxy} that talks
+ * to the server. Its methods are meant to be invoked by the view model, then invoke code that sends
+ * the relevant Json packet to the server.
  */
 public class JataRepository {
 
@@ -34,14 +37,6 @@ public class JataRepository {
   private Board board;
   private Shot shot;
 
-  /**
-   * This constructor initializes the final fields of this class. It is injectable
-   *
-   * @param proxy
-   * @param longPollProxy
-   * @param userRepository
-   * @param signInService
-   */
   @Inject
   JataRepository(JataServiceProxy proxy, JataLongPollServiceProxy longPollProxy,
       UserRepository userRepository,
@@ -55,10 +50,11 @@ public class JataRepository {
   }
 
   /**
-   * This method is part of the bridge between the UI and the {@link JataServiceProxy}. When the
-   * user taps the Start Game button, it will, through a chain of events, invoke this method, then
-   * it will invoke the method {@link JataServiceProxy#startGame(Game, String)} to send the request
-   * to the service.
+   * This method is part of the bridge between the {@link ViewModel} and the
+   * {@link JataServiceProxy}. When the user taps the Start Game button, it will, through a chain of
+   * events, invoke this method. This method uses {@link GoogleSignInService} to authenticate the
+   * user, and then it invokes the method {@link JataServiceProxy#startGame(Game, String)} to send
+   * the request to the service.
    *
    * @param game A {@link Game} object.
    */
@@ -97,6 +93,16 @@ public class JataRepository {
 //    updateGame(this.game);
   }
 
+  /**
+   * This is the method that will be invoked by {@link GameViewModel} when a player submits their
+   * ships to the server. It uses {@link GoogleSignInService} to authenticate a user, and then it
+   * invokes the {@link JataServiceProxy#submitShips(String, List, String)} and that will send the
+   * player's {@link List} of {@link Ship} and authentication in a {@link PUT} request to the
+   * service.
+   *
+   * @param ships {@link List} of {@link Ship} objects that will be placed on the board via
+   *              {@link PUT} request.
+   */
   public void submitShips(List<Ship> ships) {
     signInService
         .refreshBearerToken()
@@ -109,7 +115,12 @@ public class JataRepository {
         );
   }
 
-
+  /**
+   * This is the method that will be invoked by the {@link GameViewModel} when a player submits
+   * their shots to the server. It invokes {@link JataServiceProxy}
+   *
+   * @param shots
+   */
   public void submitShots(List<Shot> shots) {
     signInService
         .refreshBearerToken()
@@ -123,6 +134,11 @@ public class JataRepository {
 
   }
 
+  /**
+   * This method processes the long poll that we use to update our game.
+   *
+   * @return
+   */
   public Observable<Game> pollGameStatus() {
     if (gamePoller != null) {
       gamePoller.onComplete();
@@ -134,7 +150,7 @@ public class JataRepository {
                 .doOnSuccess((user) -> game.getBoards().forEach((board) ->
 //                    board.setMine(true))) // FIXME: 4/6/2024
 //            board.setMine(user.getKey().equals(board.getPlayer().getKey()))
-                    board.isMine()
+                        board.isMine()
                 ))
                 .map((user) -> game)
         )
@@ -182,6 +198,12 @@ public class JataRepository {
     gamePoller.onNext(game);
   }
 
+  /**
+   * This method validates the placement of ships when a
+   *
+   * @param ships
+   * @return
+   */
   public boolean isPlacementValid(List<Ship> ships) {
     int size = game.getBoardSize();
     boolean[][] placement = new boolean[size][size];
@@ -198,8 +220,8 @@ public class JataRepository {
         valid = false;
         break outer;
       }
-      int stepX = vertical ? 0 : 1; // this is an invariant that lives outside the loop
-      int stepY = vertical ? 1 : 0; // this is too.
+      int stepX = vertical ? 0 : 1;
+      int stepY = vertical ? 1 : 0;
       for (
           int checkY = y - 1, checkX = x - 1, step = 0;
           step < length;
