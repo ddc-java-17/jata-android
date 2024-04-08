@@ -28,7 +28,7 @@ public class BoardView extends View implements OnTouchListener {
 
   private static final long LONG_CLICK_DURATION = ViewConfiguration.getLongPressTimeout();
   private static final int MAX_CLICK_RADIUS = 15;
-  public static final int DRAWING_INSET = 20;
+  private static final int SHIP_DRAWING_INSET = 10;
 
   private Board board;
   private int size;
@@ -47,6 +47,9 @@ public class BoardView extends View implements OnTouchListener {
   private Drawable smallShip;
   private Drawable mediumShip;
   private Drawable largeShip;
+  private Drawable rotatedSmallShip;
+  private Drawable rotatedMediumShip;
+  private Drawable rotatedLargeShip;
   private Drawable hit;
   private Drawable miss;
 
@@ -60,7 +63,7 @@ public class BoardView extends View implements OnTouchListener {
     selectedShipPaint = new Paint();
     selectedShipPaint.setColor(Color.BLACK);
     selectedShipPaint.setStyle(Style.STROKE);
-    selectedShipPaint.setStrokeWidth(4);
+    selectedShipPaint.setStrokeWidth(8);
     pendingShotPaint = new Paint();
     pendingShotPaint.setColor(Color.RED);
     pendingShotPaint.setStyle(Style.FILL);
@@ -216,7 +219,6 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   private void drawShips(Canvas canvas) {
-    // TODO: 4/3/2024 invoke drawable.draw (canvas)  to draw ships on canvas.
     for (Ship ship : board.getShips()) {
       int x = ship.getX();
       float left = (x - 1) * cellWidth;
@@ -236,18 +238,18 @@ public class BoardView extends View implements OnTouchListener {
 //      right -= 20;
 //      bottom -= 20;
 //      canvas.drawRoundRect(left + DRAWING_INSET, top + DRAWING_INSET, right - DRAWING_INSET, bottom - DRAWING_INSET, DRAWING_INSET, DRAWING_INSET, shipPaint);
-//      if (ship.isSelected()) {
-//        canvas.drawRoundRect(left + DRAWING_INSET, top + DRAWING_INSET, right - DRAWING_INSET, bottom - DRAWING_INSET, DRAWING_INSET, DRAWING_INSET, selectedShipPaint);
-//      }
-      // TODO: 4/3/2024 use the ships x and y coords and orientation to select drawable to set bounds
+      if (ship.isSelected()) {
+        canvas.drawRoundRect(left, top, right, bottom, 0, 0, selectedShipPaint);
+      }
       Drawable shipDrawable = switch (ship.getLength()) {
-        case 2 -> smallShip;
-        case 3 -> mediumShip;
-        case 4 -> largeShip;
+        case 2 -> ship.isVertical() ? rotatedSmallShip : smallShip;
+        case 3 -> ship.isVertical() ? rotatedMediumShip : mediumShip;
+        case 4 -> ship.isVertical() ? rotatedLargeShip : largeShip;
         default -> null;
       };
+
       //noinspection DataFlowIssue
-      shipDrawable.setBounds((int) left + DRAWING_INSET, (int) top + DRAWING_INSET, (int) right - DRAWING_INSET, (int) bottom - DRAWING_INSET);
+      shipDrawable.setBounds((int) left + SHIP_DRAWING_INSET, (int) top + SHIP_DRAWING_INSET, (int) right - SHIP_DRAWING_INSET, (int) bottom - SHIP_DRAWING_INSET);
       shipDrawable.draw(canvas);
     }
 
@@ -262,7 +264,7 @@ public class BoardView extends View implements OnTouchListener {
       float right = left + cellWidth;
       float bottom = top + cellHeight;
       Drawable shotDrawable = shot.isHit() ? hit : miss;
-      shotDrawable.setBounds((int) left + DRAWING_INSET,(int) top + DRAWING_INSET,(int) right - DRAWING_INSET,(int) bottom - DRAWING_INSET);
+      shotDrawable.setBounds((int) left + SHIP_DRAWING_INSET,(int) top + SHIP_DRAWING_INSET,(int) right - SHIP_DRAWING_INSET,(int) bottom - SHIP_DRAWING_INSET);
      shotDrawable.draw(canvas);
     }
   }
@@ -285,6 +287,9 @@ public class BoardView extends View implements OnTouchListener {
     smallShip = AppCompatResources.getDrawable(context, R.drawable.canoe);
     mediumShip = AppCompatResources.getDrawable(context, R.drawable.galley);
     largeShip = AppCompatResources.getDrawable(context, R.drawable.trireme);
+    rotatedSmallShip = AppCompatResources.getDrawable(context, R.drawable.rotated_canoe);
+    rotatedMediumShip = AppCompatResources.getDrawable(context, R.drawable.rotated_galley);
+    rotatedLargeShip = AppCompatResources.getDrawable(context, R.drawable.rotated_trireme);
     hit = AppCompatResources.getDrawable(context, R.drawable.hit);
     miss = AppCompatResources.getDrawable(context, R.drawable.miss);
   }

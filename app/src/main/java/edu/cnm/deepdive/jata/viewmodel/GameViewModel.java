@@ -158,8 +158,8 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   @Override
   public void onStart(@NotNull LifecycleOwner owner) {
     DefaultLifecycleObserver.super.onStart(owner);
-//    gamePoll = jataRepository.pollGameStatus();
-//    throwablePoll = jataRepository.pollThrowable();
+    gamePoll = jataRepository.pollGameStatus();
+    throwablePoll = jataRepository.pollThrowable();
   }
 
   @Override
