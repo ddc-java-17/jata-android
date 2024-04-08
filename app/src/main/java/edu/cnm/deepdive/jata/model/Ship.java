@@ -41,25 +41,25 @@ public class Ship {
   /**
    * Initiates the final fields in this class.
    *
-   * @param length Indicates the length of a particular {@link Ship}. This also
-   *               indicates the total number of hits the {@code ship} can take, and the type of
-   *               {@code ship} it is as well (Trireme vs Galley vs Canoe; basically flavor text).
+   * @param length Indicates the length of a particular {@link Ship}. This also indicates the total
+   *               number of hits the {@code ship} can take, and the type of {@code ship} it is as
+   *               well (Trireme vs Galley vs Canoe; basically flavor text).
    */
   public Ship(int length) {
     this.length = length;
   }
 
   /**
-   * Gets the X coordinate of a {@code ship} on a board for other methods to access.
-   * {@code x} makes up half of a ship location on the board.
+   * Gets the X coordinate of a {@code ship} on a board for other methods to access. {@code x} makes
+   * up half of a ship location on the board.
    */
   public int getX() {
     return x;
   }
 
   /**
-   * Sets the X coordinate of a {@code ship} on a board for other methods to access.
-   * {@code x} makes up half of a ship location on the board.
+   * Sets the X coordinate of a {@code ship} on a board for other methods to access. {@code x} makes
+   * up half of a ship location on the board.
    *
    * @param x The X coordinate of a {@code ship} on a board.
    */
@@ -68,16 +68,16 @@ public class Ship {
   }
 
   /**
-   * Gets the Y coordinate of a {@code ship} on a board for other methods to access.
-   * {@code y} makes up half of a ship location on the board.
+   * Gets the Y coordinate of a {@code ship} on a board for other methods to access. {@code y} makes
+   * up half of a ship location on the board.
    */
   public int getY() {
     return y;
   }
 
   /**
-   * Sets the Y coordinate of a {@code ship} on a board for other methods to access.
-   * This makes up half of a ship location on the board.
+   * Sets the Y coordinate of a {@code ship} on a board for other methods to access. This makes up
+   * half of a ship location on the board.
    *
    * @param y Y coordinate of a {@code ship} on a board.
    */
@@ -86,17 +86,17 @@ public class Ship {
   }
 
   /**
-   * Gets {@code length}. The {@code length} is how many points on a board that a
-   * {@code ship} occupies on a board. It also indicates how many hits a ship can take and what type
-   * of {@code ship} it is.
+   * Gets {@code length}. The {@code length} is how many points on a board that a {@code ship}
+   * occupies on a board. It also indicates how many hits a ship can take and what type of
+   * {@code ship} it is.
    */
   public int getLength() {
     return length;
   }
 
   /**
-   * Gets {@code Vertical}. {@code Vertical} is a boolean flag indicating if a ship has
-   * been oriented vertically or horizontally on the board.
+   * Gets {@code Vertical}. {@code Vertical} is a boolean flag indicating if a ship has been
+   * oriented vertically or horizontally on the board.
    */
   public boolean isVertical() {
     return vertical;
@@ -113,8 +113,8 @@ public class Ship {
   }
 
   /**
-   * Gets {@code selected}. {@code selected} is a boolean flag indicating if a ship has
-   * been selected in the UI.
+   * Gets {@code selected}. {@code selected} is a boolean flag indicating if a ship has been
+   * selected in the UI.
    */
   public boolean isSelected() {
     return selected;
