@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
     viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
     viewModel.getGame()
         .observe(getViewLifecycleOwner(), (game) -> {
-          if (game != null) {
+          if (game != null && !game.isFinished()) {
             navController.navigate(HomeFragmentDirections.navigateToGame(boardSizeValue, playerCountValue));
           }
         });

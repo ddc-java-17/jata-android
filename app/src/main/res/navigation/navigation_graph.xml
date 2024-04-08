@@ -46,6 +46,11 @@
     <argument
       android:name="player_count"
       app:argType="integer"/>
+
+    <action
+      android:id="@+id/navigate_to_win_dialog"
+      app:destination="@id/win_dialog"/>
+
   </fragment>
 
   <fragment
@@ -70,6 +75,16 @@
     android:id="@+id/navigation_sign_in_demo"
     android:name="edu.cnm.deepdive.jata.controller.DemoFragment"
     tools:layout="@layout/fragment_demo"/>
+
+  <dialog
+    android:id="@+id/win_dialog"
+    android:name="edu.cnm.deepdive.jata.controller.WinDialogueFragment">
+
+    <action
+      android:id="@+id/navigate_to_home"
+      app:destination="@id/home_fragment"/>
+
+  </dialog>
 
   <dialog
     android:id="@+id/navigation_permissions_explanation"
