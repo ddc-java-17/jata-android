@@ -24,7 +24,7 @@ public class Ship {
   private boolean selected;
 
   /**
-   * Initializes the fields in {@link Ship}.
+   * Initializes final fields in absence of Gson initialization.
    *
    * @param x        The x value of the ship coordinate.
    * @param y        The y value of the ship coordinate.
