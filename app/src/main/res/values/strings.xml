@@ -16,8 +16,8 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-<!--  DO NOT add an app_name property when using this starter template; it is created automatically.-->
-<!--  <string name="app_name">App Starter</string>-->
+  <!--  DO NOT add an app_name property when using this starter template; it is created automatically.-->
+  <!--  <string name="app_name">App Starter</string>-->
 
   <string name="login_failure_message">Unable to sign in with provided credentials.</string>
   <string name="sign_out">Sign out</string>
@@ -47,5 +47,7 @@
   <string name="fire_shots">Fire shots</string>
   <string name="armada_ready_prepare_for_battle">Armada ready, prepare for battle!</string>
   <string name="shots_remaining">Shots remaining:</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
