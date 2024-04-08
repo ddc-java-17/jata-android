@@ -52,7 +52,7 @@ public class JataRepository {
   /**
    * Authenticates a user, invokes the {@link JataServiceProxy#startGame(Game, String)} to send an
    * HTTP request to the server, and then begins listening for the long poll responses from the
-   * server.
+   * server, and then processes the response from the server.
    *
    * @param game A {@link Game} object to be sent to the server.
    */
@@ -94,7 +94,7 @@ public class JataRepository {
   /**
    * Authenticates a user, invokes the {@link JataServiceProxy#submitShips(String, List, String)}
    * method to send an HTTP request to the server, and then listens for the long poll
-   * responses from the server.
+   * responses from the server, and then processes the response from the server.
    *
    * @param ships {@link List} of {@link Ship} objects that will be sent to the server.
    */
@@ -112,7 +112,8 @@ public class JataRepository {
 
   /**
    * Authenticates a user, invokes {@link JataServiceProxy#submitShots(String, List, String)} to
-   * send an HTTP request to the server, then listens for the long poll responses from the server.
+   * send an HTTP request to the server, listens for the long poll responses from the server,
+   * and then processes the response from the server.
    *
    * @param shots
    */
@@ -156,6 +157,11 @@ public class JataRepository {
         });
   }
 
+  /**
+   * Processes long poll responses throwing an exception.
+   *
+   * @return Reactive stream of a {@link Throwable} that can be subscribed to.
+   */
   public Observable<Throwable> pollThrowable() {
     if (throwablePoller != null) {
       throwablePoller.onComplete();
@@ -165,11 +171,19 @@ public class JataRepository {
         .subscribeOn(scheduler);
   }
 
+  /**
+   * Stops long polling when invoked.
+   */
   public void stopPolling() {
     gamePoller.onComplete();
     throwablePoller.onComplete();
   }
 
+  /**
+   *
+   * @param ships
+   * @param boardIndex
+   */
   public void changePlacement(List<Ship> ships, int boardIndex) {
     if (isPlacementValid(ships)) {
       List<Ship> boardShips = game.getBoards().get(boardIndex).getShips();
@@ -194,10 +208,11 @@ public class JataRepository {
   }
 
   /**
-   * Validates the placement of ships when a
+   * Validates the placement of ships when a user moves a ship on their board before submitting
+   * their ships.
    *
-   * @param ships
-   * @return
+   * @param ships {@link List} of ships as they have been currently placed on the board.
+   * @return Boolean flag indicating whether ship placement is valid.
    */
   public boolean isPlacementValid(List<Ship> ships) {
     int size = game.getBoardSize();
@@ -232,6 +247,13 @@ public class JataRepository {
     return valid;
   }
 
+  /**
+   * Authenticates the user, invokes {@link JataLongPollServiceProxy#getGame(String, String)} to
+   * send an HTTP request to the server, listens for the response from the server, and then
+   * processes the response from the server.
+   *
+   * @param key Unique identifying key for the {@link Game} object.
+   */
   private void getGame(String key) {
     signInService
         .refreshBearerToken()
@@ -245,22 +267,41 @@ public class JataRepository {
         );
   }
 
+  /**
+   * Updates the {@link Game} object when the server responds to the long poll.
+   *
+   * @param game {@link Game} object from the server.
+   */
   private void updateGame(Game game) {
     if (gamePoller != null) {
       gamePoller.onNext(game);
     }
   }
 
+  /**
+   * Handles exceptions and errors the server may throw in response to the long poll.
+   *
+   * @param throwable Exception or error from the server.
+   */
   private void updateThrowable(Throwable throwable) {
     if (throwablePoller != null) {
       throwablePoller.onNext(throwable);
     }
   }
 
+  /**
+   * Sets the {@link Game} object.
+   *
+   * @param game
+   */
   private void setGame(Game game) {
     this.game = game;
   }
 
+  /**
+   * Defines custom exception thrown by {@link JataRepository#changePlacement(List, int)} when a
+   * user puts their ship in an invalid position.
+   */
   public static class InvalidShipPlacementException extends IllegalArgumentException {
 
     public InvalidShipPlacementException() {
