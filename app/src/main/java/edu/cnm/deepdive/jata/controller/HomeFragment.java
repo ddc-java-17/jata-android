@@ -32,6 +32,8 @@ public class HomeFragment extends Fragment {
   private FragmentHomeBinding binding;
   private NavController navController;
   private GameViewModel viewModel;
+  private int boardSizeValue;
+  private int playerCountValue;
 
   @Nullable
   @Override
@@ -47,10 +49,9 @@ public class HomeFragment extends Fragment {
         requireContext(), android.R.layout.simple_dropdown_item_1line, playerCount));
     // TODO: 4/4/2024 attach click listener to button to start game.
     binding.startGame.setOnClickListener((v) -> {
-      int boardSizeValue = boardSizeValues[binding.boardSize.getSelectedItemPosition()];
-      int playerCountValue = Integer.parseInt((String) binding.playerCount.getSelectedItem());
+      boardSizeValue = boardSizeValues[binding.boardSize.getSelectedItemPosition()];
+      playerCountValue = Integer.parseInt((String) binding.playerCount.getSelectedItem());
       viewModel.startGame(boardSizeValue, playerCountValue);
-      navController.navigate(HomeFragmentDirections.navigateToGame(boardSizeValue, playerCountValue));
     });
     return binding.getRoot();
   }
@@ -60,6 +61,12 @@ public class HomeFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     navController = Navigation.findNavController(view);
     viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
+    viewModel.getGame()
+        .observe(getViewLifecycleOwner(), (game) -> {
+          if (game != null) {
+            navController.navigate(HomeFragmentDirections.navigateToGame(boardSizeValue, playerCountValue));
+          }
+        });
   }
 
 }
