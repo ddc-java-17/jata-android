@@ -299,7 +299,8 @@ public class JataRepository {
   }
 
   /**
-   * Defines custom exception thrown by {@link JataRepository#changePlacement(List, int)}.
+   * Defines custom exception thrown by {@link JataRepository#changePlacement(List, int)} when a
+   * user puts their ship in an invalid position.
    */
   public static class InvalidShipPlacementException extends IllegalArgumentException {
 
