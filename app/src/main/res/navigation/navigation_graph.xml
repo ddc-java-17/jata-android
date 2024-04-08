@@ -46,6 +46,11 @@
     <argument
       android:name="player_count"
       app:argType="integer"/>
+
+    <action
+      android:id="@+id/navigate_to_lose_dialog"
+      app:destination="@id/lose_dialog_fragment"/>
+
   </fragment>
 
   <fragment
@@ -65,6 +70,16 @@
     </action>
 
   </fragment>
+
+  <dialog
+    android:id="@+id/lose_dialog_fragment"
+    android:name="edu.cnm.deepdive.jata.controller.LoseDialogFragment">
+
+    <action
+      android:id="@+id/navigate_to_home"
+      app:destination="@id/home_fragment"/>
+
+  </dialog>
 
   <fragment
     android:id="@+id/navigation_sign_in_demo"

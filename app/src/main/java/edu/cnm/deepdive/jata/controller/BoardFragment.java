@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.databinding.FragmentBoardBinding;
@@ -52,7 +54,6 @@ public class BoardFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater,
       @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     binding = FragmentBoardBinding.inflate(inflater, container, false);
-    // TODO: 4/3/2024 attach any listeners as needed.
     return binding.getRoot();
   }
 
@@ -62,20 +63,25 @@ public class BoardFragment extends Fragment {
     viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
     viewModel.getGame()
         .observe(getViewLifecycleOwner(), (game) -> {
-          binding.gameBoard.setSize(game.getBoardSize());
-          board = game.getBoards().get(boardIndex);
-          binding.gameBoard.setBoard(board);
-          binding.gameBoard.setClickListener((gridX, gridY, ship) -> Log.d(TAG,
-              String.format("clicked: %1$d, %2$d, %3$s", gridX, gridY, ship)));
-          binding.placeShips.setVisibility(View.INVISIBLE);
-          if (!board.isPlaced() && board.isMine()) {
-            binding.placeShips.setVisibility(View.VISIBLE);
-            binding.gameBoard.setLongClickListener(this::handleLongClick);
-            binding.placeShips.setOnClickListener((v) -> viewModel.submitShips(boardIndex));
-          } else if (game.isYourTurn()) {
-            binding.gameBoard.setClickListener((gridX, gridY, ship) -> {
-              viewModel.toggleShots(boardIndex, gridX, gridY);
-            });
+           board = game.getBoards().get(boardIndex);
+          if (!board.isFleetSunk()) {
+            binding.gameBoard.setSize(game.getBoardSize());
+            binding.gameBoard.setBoard(board);
+            binding.gameBoard.setClickListener((gridX, gridY, ship) -> Log.d(TAG,
+                String.format("clicked: %1$d, %2$d, %3$s", gridX, gridY, ship)));
+            binding.placeShips.setVisibility(View.INVISIBLE);
+            if (!board.isPlaced() && board.isMine()) {
+              binding.placeShips.setVisibility(View.VISIBLE);
+              binding.gameBoard.setLongClickListener(this::handleLongClick);
+              binding.placeShips.setOnClickListener((v) -> viewModel.submitShips(boardIndex));
+            } else if (game.isYourTurn()) {
+              binding.gameBoard.setClickListener((gridX, gridY, ship) -> {
+                viewModel.toggleShots(boardIndex, gridX, gridY);
+              });
+            }
+          } else {
+            NavController navController = Navigation.findNavController(binding.getRoot());
+            navController.navigate(GameFragmentDirections.navigateToLoseDialog());
           }
         });
     viewModel.getPendingShots()
