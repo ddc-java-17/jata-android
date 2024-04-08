@@ -18,7 +18,7 @@ public class Shot {
   private final int y;
 
   @Expose
-  private final boolean isHit;
+  private final boolean hit;
 
   /**
    * Initializes final fields in absence of Gson initialization.
@@ -26,13 +26,13 @@ public class Shot {
    * @param toUser User who is being fired at.
    * @param x      X coordinate of where on the grid the shot is being fired.
    * @param y      Y coordinate of where on the grid the shot is being fired.
-   * @param isHit  Indicates if a shot has hit a ship.
+   * @param hit  Indicates if a shot has hit a ship.
    */
-  public Shot(User toUser, int x, int y, boolean isHit) {
+  public Shot(User toUser, int x, int y, boolean hit) {
     this.toUser = toUser;
     this.x = x;
     this.y = y;
-    this.isHit = isHit;
+    this.hit = hit;
   }
 
   /**
@@ -60,6 +60,6 @@ public class Shot {
    * Gets the boolean flag indicating whether a shot has hit a ship.
    */
   public boolean isHit() {
-    return isHit;
+    return hit;
   }
 }
