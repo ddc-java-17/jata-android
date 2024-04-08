@@ -172,10 +172,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   * Method used to place a shot before firing, on tap it will show a red circle where your shot would
   * be fired, same spot can be tapped again to remove that shot so it can be placed somewhere else.
   */
-
-  /**
-   * @noinspection DataFlowIssue
-   */
+    //@noinspection DataFlowIssue
   public void toggleShots(int boardIndex, int gridX, int gridY) {
     int limit = shotLimit.getValue();
     int count = shotCounter.getValue();
@@ -217,7 +214,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         })
         .collect(Collectors.toList());
     pendingShots.clear();
-    shotCounter = 0;
+    shotCounter.setValue(0);
     jataRepository.submitShots(shotsToSubmit);
   }
 
