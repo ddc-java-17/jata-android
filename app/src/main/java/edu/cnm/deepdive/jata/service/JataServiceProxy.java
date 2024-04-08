@@ -7,29 +7,28 @@ import io.reactivex.rxjava3.core.Single;
 import java.util.List;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.HTTP;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
- * This interface is what allows the client or app side logic to make {@link HTTP} requests to the
- * server.
+ * Invoked by the repository to make {@link HTTP} requests to the server.
  */
 public interface JataServiceProxy {
 
   /**
-   * This method sends an HTTP {@link POST} request to the server to initialize a {@code game}. The
-   * game object the player sends will have game parameters that the user wants for their game
+   * Sends an HTTP {@link POST} request to the server to initialize a {@code game}. The game object
+   * the player sends will have game parameters that the user wants for their game
    * ({@code boardSize} and {@code playerCount}) and the server will return either a new game object
    * or a game object that has been created by another player that the current user can join.
    *
-   * @param game        This is the {@link Game} object the user will send containing the preferred
-   *                    parameters for their game.
-   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
-   *                    user is who they say they are.
-   * @return
+   * @param game        {@link Game} object the user will send containing the preferred parameters
+   *                    for their game.
+   * @param bearerToken Randomly generated authentication token we use to confirm that the user is
+   *                    who they say they are.
+   * @return {@link Single} updated {@link Game} object that the server sends back.
    */
   @POST("games")
   Single<Game> startGame(
@@ -37,13 +36,12 @@ public interface JataServiceProxy {
       @Header("Authorization") String bearerToken);
 
   /**
-   * This method sends an HTTP {@link GET} request to the server for a particular {@link Game}
-   * object. The server will respond with a {@link Single} of the {@code game} object with that {@code key}.
+   * Sends an HTTP {@link GET} request to the server for a particular {@link Game} object.
    *
-   * @param key         This is the unique key for the {@code game}.
-   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
-   *                    user is who they say they are.
-   * @return {@link Single} task that will return the server's {@link Game} object.
+   * @param key         Unique key for the {@code game}.
+   * @param bearerToken Randomly generated authentication token we use to confirm that the user is
+   *                    who they say they are.
+   * @return {@link Single} updated {@link Game} object that the server sends back.
    */
   @GET("games/{key}")
   Single<Game> getGame(
@@ -51,16 +49,16 @@ public interface JataServiceProxy {
       @Header("Authorization") String bearerToken);
 
   /**
-   * This method sends a {@link PUT} request to the server to place {@code ships} on the board. The
-   * server will respond with a {@link Single} of the {@code game}.
+   * Sends a {@link PUT} request to the server to submitthe current placement of {@code ships} on
+   * the board.
    *
-   * @param key The unique identifying {@link String} that identifies a particular {@link Game}
-   *            object.
-   * @param ships The {@link List} of {@link Ship} that the player has placed on their board in a
-   *              valid formation.
-   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
-   *                    user is who they say they are.
-   * @return {@link Single} task that will return the server's {@link Game} object.
+   * @param key         Unique identifying {@link String} that identifies the current {@link Game}
+   *                    object.
+   * @param ships       {@link List} of {@link Ship} that the player has placed on their board in a
+   *                    valid formation.
+   * @param bearerToken Randomly generated authentication token we use to confirm that the user is
+   *                    who they say they are.
+   * @return {@link Single} updated {@link Game} object that the server sends back.
    */
   @PUT("games/{gameKey}/ships")
   Single<Game> submitShips(
@@ -69,12 +67,15 @@ public interface JataServiceProxy {
       @Header("Authorization") String bearerToken);
 
   /**
+   * Sends a {@link POST} request to the server to submit the current {@code shots} on the board.
    *
-   *
-   * @param key
-   * @param shots
-   * @param bearerToken
-   * @return
+   * @param key         Unique identifying {@link String} that identifies the current {@link Game}
+   *                    object.
+   * @param shots       {@link List} of valid {@link Shot} that the player has fired at other
+   *                    players or themselves.
+   * @param bearerToken Randomly generated authentication token we use to confirm that the user is
+   *                    who they say they are.
+   * @return {@link Single} updated {@link Game} object that the server sends back.
    */
   @POST("games/{gameKey}/shots")
   Single<Game> submitShots(
