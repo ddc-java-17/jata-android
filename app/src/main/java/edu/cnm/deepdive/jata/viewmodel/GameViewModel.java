@@ -48,7 +48,9 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
    *
    * @param jataRepository JataRepository
    */
-  /** @noinspection DataFlowIssue*/
+  /**
+   * @noinspection DataFlowIssue
+   */
   @Inject
   public GameViewModel(JataRepository jataRepository) {
     this.jataRepository = jataRepository;
@@ -89,6 +91,18 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
    */
   public LiveData<Map<Integer, boolean[][]>> getPendingShots() {
     return pendingShots;
+  }
+
+  public LiveData<Integer> getShotLimit() {
+    return shotLimit;
+  }
+
+  public LiveData<Integer> getShotCounter() {
+    return shotCounter;
+  }
+
+  public LiveData<Integer> getShotsRemaining() {
+    return shotsRemaining;
   }
 
   /**
@@ -169,10 +183,13 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     jataRepository.submitShips(game.getValue().getBoards().get(boardIndex).getShips());
   }
   /**
-  * Method used to place a shot before firing, on tap it will show a red circle where your shot would
-  * be fired, same spot can be tapped again to remove that shot so it can be placed somewhere else.
-  */
-    //@noinspection DataFlowIssue
+   * Method used to place a shot before firing, on tap it will show a red circle where your shot would
+   * be fired, same spot can be tapped again to remove that shot so it can be placed somewhere else.
+   */
+
+  /**
+   * @noinspection DataFlowIssue
+   */
   public void toggleShots(int boardIndex, int gridX, int gridY) {
     int limit = shotLimit.getValue();
     int count = shotCounter.getValue();
@@ -185,16 +202,15 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
       shotCounter.setValue(count - 1);
     } else if (count < limit) {
       boardPendingShots[gridY - 1][gridX - 1] = true;
-      shotCounter.setValue(count +1);
+      shotCounter.setValue(count + 1);
     }
     this.pendingShots.setValue(pendingShots);
   }
+
   /**
    * Method used to submit your shots against other users.
    */
-  /**
-   * @noinspection DataFlowIssue
-   */
+  //@noinspection DataFlowIssue
   public void submitShots() {
     Map<Integer, boolean[][]> pendingShots = this.pendingShots.getValue();
     List<Board> boards = game.getValue().getBoards();
