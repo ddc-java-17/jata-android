@@ -28,7 +28,7 @@ public interface JataServiceProxy {
    *                    for their game.
    * @param bearerToken Randomly generated authentication token we use to confirm that the user is
    *                    who they say they are.
-   * @return {@link Single} updated {@link Game} object that the server sends back.
+   * @return Reactive stream of the single updated {@link Game} object that the server sends back.
    */
   @POST("games")
   Single<Game> startGame(
@@ -41,7 +41,7 @@ public interface JataServiceProxy {
    * @param key         Unique key for the {@code game}.
    * @param bearerToken Randomly generated authentication token we use to confirm that the user is
    *                    who they say they are.
-   * @return {@link Single} updated {@link Game} object that the server sends back.
+   * @return Reactive stream of the single updated {@link Game} object that the server sends back.
    */
   @GET("games/{key}")
   Single<Game> getGame(
@@ -58,7 +58,7 @@ public interface JataServiceProxy {
    *                    valid formation.
    * @param bearerToken Randomly generated authentication token we use to confirm that the user is
    *                    who they say they are.
-   * @return {@link Single} updated {@link Game} object that the server sends back.
+   * @return Reactive stream of the single updated {@link Game} object that the server sends back.
    */
   @PUT("games/{gameKey}/ships")
   Single<Game> submitShips(

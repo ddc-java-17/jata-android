@@ -20,7 +20,7 @@ public interface JataLongPollServiceProxy {
    * @param key         This is the unique key for the {@code game}.
    * @param bearerToken This is a randomly generated authentication token we use to confirm that the
    *                    user is who they say they are.
-   * @return {@link Single} task that will return the server's {@code game} object.
+   * @return Reactive stream of the single updated {@link Game} object that the server sends back.
    */
   @GET("games/{key}")
   Single<Game> getGame(
