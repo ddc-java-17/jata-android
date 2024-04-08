@@ -15,7 +15,17 @@ import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.databinding.FragmentHomeBinding;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
+import edu.cnm.deepdive.jata.viewmodel.LoginViewModel;
+import edu.cnm.deepdive.jata.viewmodel.PermissionsViewModel;
+import edu.cnm.deepdive.jata.viewmodel.PreferencesViewModel;
+import edu.cnm.deepdive.jata.viewmodel.UserViewModel;
 
+/**
+ * Demonstrates access to and observation of {@link androidx.lifecycle.LiveData} elements in
+ * {@link GameViewModel}, as well as acting as a navigation placeholder. This fragment inflates the home
+ * screen for the app, and holds the settings for boardSize and player count for the user to set. It also
+ * has a start game button which navigates you to the GameFragment.
+ */
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
 

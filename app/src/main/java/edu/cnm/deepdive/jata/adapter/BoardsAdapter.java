@@ -7,6 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import edu.cnm.deepdive.jata.controller.BoardFragment;
 import edu.cnm.deepdive.jata.model.Game;
 
+/**
+ * This adapter class is used to create new board fragments for each user in each game.
+ */
 public class BoardsAdapter extends FragmentStateAdapter {
 
   private final int size;

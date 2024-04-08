@@ -15,7 +15,17 @@ import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.adapter.BoardsAdapter;
 import edu.cnm.deepdive.jata.databinding.FragmentGameBinding;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
+import edu.cnm.deepdive.jata.viewmodel.LoginViewModel;
+import edu.cnm.deepdive.jata.viewmodel.PermissionsViewModel;
+import edu.cnm.deepdive.jata.viewmodel.PreferencesViewModel;
+import edu.cnm.deepdive.jata.viewmodel.UserViewModel;
 
+/**
+ * Demonstrates access to and observation of {@link androidx.lifecycle.LiveData} elements in
+ * {@link GameViewModel},as well as acting as a navigation placeholder. This fragment is used to implement
+ * the viewpager 2 and tabLayoutMediator which allow you to scroll between boards during a game, as well
+ * as handling the action of firing shots using the fire button.
+ */
 @AndroidEntryPoint
 public class GameFragment extends Fragment {
 

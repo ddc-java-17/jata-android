@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -15,14 +12,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.databinding.FragmentBoardBinding;
 import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
+import edu.cnm.deepdive.jata.viewmodel.LoginViewModel;
+import edu.cnm.deepdive.jata.viewmodel.PermissionsViewModel;
+import edu.cnm.deepdive.jata.viewmodel.PreferencesViewModel;
+import edu.cnm.deepdive.jata.viewmodel.UserViewModel;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Demonstrates access to and observation of {@link androidx.lifecycle.LiveData} elements in
+ * {@link GameViewModel}, as well as acting as a navigation placeholder. This fragment is used to inflate a
+ * board object for a game, and handle the movement and placement of ships for a specific game.
+ */
+@AndroidEntryPoint
 public class BoardFragment extends Fragment {
 
   private static final String TAG = BoardFragment.class.getSimpleName();
@@ -34,7 +42,7 @@ public class BoardFragment extends Fragment {
   private Board board;
 
   @Override
-  public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     boardIndex = getArguments().getInt(BOARD_INDEX_KEY);
   }
@@ -72,10 +80,10 @@ public class BoardFragment extends Fragment {
           }
         });
     viewModel.getPendingShots()
-            .observe(getViewLifecycleOwner(), (shotMap) -> {
-              boolean[][] pendingShots = shotMap.get(boardIndex);
-              binding.gameBoard.setShots(pendingShots);
-            });
+        .observe(getViewLifecycleOwner(), (shotMap) -> {
+          boolean[][] pendingShots = shotMap.get(boardIndex);
+          binding.gameBoard.setShots(pendingShots);
+        });
     viewModel.getThrowable()
         .observe(getViewLifecycleOwner(), (throwable) ->
             Toast.makeText(requireContext(), throwable.toString(), Toast.LENGTH_LONG).show());

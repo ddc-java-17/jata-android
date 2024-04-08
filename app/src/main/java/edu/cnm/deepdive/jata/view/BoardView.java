@@ -19,6 +19,11 @@ import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
 
+/**
+ * This view class extends the {@View class} and implements OnTouchListener. This classs handles
+ * everything that happens on the board. It holds all the drawbales for the board itself, the ships,
+ * and the shots, as well as the methods to draw them on the board.
+ */
 public class BoardView extends View implements OnTouchListener {
 
   private static final long LONG_CLICK_DURATION = ViewConfiguration.getLongPressTimeout();
@@ -60,21 +65,43 @@ public class BoardView extends View implements OnTouchListener {
     pendingShotPaint.setStyle(Style.FILL);
   }
 
+  /**
+   * A constructor for the BoardView.
+   * @param context Context
+   */
   public BoardView(Context context) {
     super(context);
     loadResources(context);
   }
 
+  /**
+   * Another constructor, with an extra parameter.
+   * @param context Context.
+   * @param attrs AttributeSet.
+   */
   public BoardView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     loadResources(context);
   }
 
+  /**
+   * Another constructor, this one implementing more parameters.
+   * @param context Context.
+   * @param attrs AttributeSet.
+   * @param defStyleAttr int.
+   */
   public BoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     loadResources(context);
   }
 
+  /**
+   * A fourth constructor, this one with one additional parameter.
+   * @param context Context.
+   * @param attrs AttributeSet.
+   * @param defStyleAttr int.
+   * @param defStyleRes int.
+   */
   public BoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
@@ -111,16 +138,28 @@ public class BoardView extends View implements OnTouchListener {
     }
   }
 
+  /**
+   * Sets the board after an update occurs.
+   * @param board Board.
+   */
   public void setBoard(Board board) {
     this.board = board;
     update();
   }
 
+  /**
+   * Sets the boardSize.
+   * @param size int.
+   */
   public void setSize(int size) {
     this.size = size;
     update();
   }
 
+  /**
+   * Sets the shots on a board.
+   * @param shots boolean[][]
+   */
   public void setShots(boolean[][] shots) {
     this.shots = shots;
   }
@@ -136,17 +175,25 @@ public class BoardView extends View implements OnTouchListener {
     }
   }
 
-  private boolean isCloseEnough(MotionEvent event) {
-    return Math.hypot(event.getX() - downX, event.getY() - downY) < MAX_CLICK_RADIUS;
+  /**
+   * Sets the long click listener used to get the pop-up menu for moving ships.
+   * @param longClickListener onLongClickListener.
+   */
+  public void setLongClickListener(
+      OnLongClickListener longClickListener) {
+    this.longClickListener = longClickListener;
   }
 
+  /**
+   * Sets the click listener used to place and toggle shots.
+   * @param clickListener OnClickListener.
+   */
   public void setClickListener(OnClickListener clickListener) {
     this.clickListener = clickListener;
   }
 
-  public void setLongClickListener(
-      OnLongClickListener longClickListener) {
-    this.longClickListener = longClickListener;
+  private boolean isCloseEnough(MotionEvent event) {
+    return Math.hypot(event.getX() - downX, event.getY() - downY) < MAX_CLICK_RADIUS;
   }
 
   private void drawGrid(Canvas canvas) {
@@ -265,10 +312,16 @@ public class BoardView extends View implements OnTouchListener {
     return handled;
   }
 
+  /**
+   * A nested Interface used to set the click listener.
+   */
   public interface OnClickListener {
     void onClick(int gridX, int gridY, Ship ship);
   }
 
+  /**
+   * A nested interface used to set the long click listener.
+   */
   public interface OnLongClickListener {
     void onLongClick(int gridX, int gridY, float viewX, float viewY, Ship ship);
   }
