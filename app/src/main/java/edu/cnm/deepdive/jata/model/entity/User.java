@@ -76,16 +76,14 @@ public class User {
   }
 
   /**
-   * Gets the
-   *
-   * @return
+   * Returns the unique key of this instance. This key is what we will send to and from the server.
    */
   public String getKey() {
     return key;
   }
 
   /**
-   *
+   * Sets the unique key of this instance. This key is what we will send to and from the server.
    *
    * @param key
    */
@@ -146,9 +144,6 @@ public class User {
   public void setDisplayName(@NonNull String displayName) {
     this.displayName = displayName;
   }
-
-  // TODO Define additional getters and setters. These must be defined for any additional fields
-  //  mapped to database columns.
 
   /**
    * Computes and returns the {@code int}-valued hash code of this instance. Currently, this
