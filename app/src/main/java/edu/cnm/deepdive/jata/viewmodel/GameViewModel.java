@@ -48,9 +48,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
    *
    * @param jataRepository JataRepository
    */
-  /**
-   * @noinspection DataFlowIssue
-   */
+   // @noinspection DataFlowIssue
   @Inject
   public GameViewModel(JataRepository jataRepository) {
     this.jataRepository = jataRepository;
