@@ -54,7 +54,7 @@
 
     <action
       android:id="@+id/navigate_to_win_dialog"
-      app:destination="@id/win_dialog"/>
+      app:destination="@id/win_dialog_fragment"/>
 
   </fragment>
 
@@ -92,7 +92,7 @@
     tools:layout="@layout/fragment_demo"/>
 
   <dialog
-    android:id="@+id/win_dialog"
+    android:id="@+id/win_dialog_fragment"
     android:name="edu.cnm.deepdive.jata.controller.WinDialogueFragment">
 
     <action

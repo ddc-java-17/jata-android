@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
 
 /**
  * Informs the winning user that they have won.
  */
+@AndroidEntryPoint
 public class WinDialogueFragment extends DialogFragment {
 
   @NonNull

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
@@ -20,17 +21,14 @@ import edu.cnm.deepdive.jata.databinding.FragmentBoardBinding;
 import edu.cnm.deepdive.jata.model.Board;
 import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
-import edu.cnm.deepdive.jata.viewmodel.LoginViewModel;
-import edu.cnm.deepdive.jata.viewmodel.PermissionsViewModel;
-import edu.cnm.deepdive.jata.viewmodel.PreferencesViewModel;
-import edu.cnm.deepdive.jata.viewmodel.UserViewModel;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Demonstrates access to and observation of {@link androidx.lifecycle.LiveData} elements in
- * {@link GameViewModel}, as well as acting as a navigation placeholder. This fragment is used to inflate a
- * board object for a game, and handle the movement and placement of ships for a specific game.
+ * {@link GameViewModel}, as well as acting as a navigation placeholder. This fragment is used to
+ * inflate a board object for a game, and handle the movement and placement of ships for a specific
+ * game.
  */
 @AndroidEntryPoint
 public class BoardFragment extends Fragment {
@@ -63,7 +61,7 @@ public class BoardFragment extends Fragment {
     viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
     viewModel.getGame()
         .observe(getViewLifecycleOwner(), (game) -> {
-           board = game.getBoards().get(boardIndex);
+          board = game.getBoards().get(boardIndex);
           if (!board.isFleetSunk()) {
             binding.gameBoard.setSize(game.getBoardSize());
             binding.gameBoard.setBoard(board);
@@ -79,9 +77,15 @@ public class BoardFragment extends Fragment {
                 viewModel.toggleShots(boardIndex, gridX, gridY);
               });
             }
-          } else {
+          } else if (game.isFinished()) {
+            boolean win = game.getBoards()
+                .stream()
+                .noneMatch((board) -> board.isMine() && board.isFleetSunk());
             NavController navController = Navigation.findNavController(binding.getRoot());
-            navController.navigate(GameFragmentDirections.navigateToLoseDialog());
+            NavDirections directions = win
+                ? GameFragmentDirections.navigateToWinDialog()
+                : GameFragmentDirections.navigateToLoseDialog();
+            navController.navigate(directions);
           }
         });
     viewModel.getPendingShots()

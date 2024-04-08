@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.jata.R;
 import edu.cnm.deepdive.jata.viewmodel.GameViewModel;
 
