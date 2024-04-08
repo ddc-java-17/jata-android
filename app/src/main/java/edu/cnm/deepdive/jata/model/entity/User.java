@@ -75,10 +75,20 @@ public class User {
     this.id = id;
   }
 
+  /**
+   * Gets the
+   *
+   * @return
+   */
   public String getKey() {
     return key;
   }
 
+  /**
+   *
+   *
+   * @param key
+   */
   public void setKey(String key) {
     this.key = key;
   }
