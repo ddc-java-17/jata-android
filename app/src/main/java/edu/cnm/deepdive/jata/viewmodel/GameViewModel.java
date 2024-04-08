@@ -5,7 +5,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import edu.cnm.deepdive.jata.model.Board;
@@ -39,13 +41,26 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   private Observable<Game> gamePoll;
   private Observable<Throwable> throwablePoll;
   private final MutableLiveData<Map<Integer, boolean[][]>> pendingShots;
-  private int shotLimit;
-  private int shotCounter;
+  private LiveData<Integer> shotLimit;
+  private MutableLiveData<Integer> shotCounter;
+  private MediatorLiveData<Integer> shotsRemaining;
 
+  /** @noinspection DataFlowIssue*/
   @Inject
   public GameViewModel(JataRepository jataRepository) {
     this.jataRepository = jataRepository;
     game = new MutableLiveData<>();
+    shotLimit = Transformations.map(game, (g) ->
+        (int) (g.getBoards()
+            .stream()
+            .filter((board) -> !board.isFleetSunk())
+            .count() - 1));
+    shotCounter = new MutableLiveData<>(0);
+    shotsRemaining = new MediatorLiveData<>();
+    shotsRemaining.addSource(shotLimit,
+        (limit) -> shotsRemaining.setValue(limit - shotCounter.getValue()));
+    shotsRemaining.addSource(shotCounter,
+        (count) -> shotsRemaining.setValue(shotLimit.getValue() - count));
     throwable = new MutableLiveData<>();
     pending = new CompositeDisposable();
     gamePoll = jataRepository.pollGameStatus();
@@ -63,6 +78,18 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     return pendingShots;
   }
 
+  public LiveData<Integer> getShotLimit() {
+    return shotLimit;
+  }
+
+  public LiveData<Integer> getShotCounter() {
+    return shotCounter;
+  }
+
+  public LiveData<Integer> getShotsRemaining() {
+    return shotsRemaining;
+  }
+
   public LiveData<Throwable> getThrowable() {
     return throwable;
   }
@@ -74,12 +101,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   public void pollGame() {
     gamePoll
         .subscribe(
-            (game) -> {
-              this.game.postValue(game);
-              shotLimit = (int) (game.getBoards().stream()
-                  .filter((board) -> !board.isFleetSunk())
-                  .count() - 1);
-            },
+            game::postValue,
             this::postThrowable,
             () -> {
             },
@@ -115,16 +137,18 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
    * @noinspection DataFlowIssue
    */
   public void toggleShots(int boardIndex, int gridX, int gridY) {
+    int limit = shotLimit.getValue();
+    int count = shotCounter.getValue();
     Map<Integer, boolean[][]> pendingShots = this.pendingShots.getValue();
     int boardSize = game.getValue().getBoardSize();
     boolean[][] boardPendingShots = pendingShots.computeIfAbsent(boardIndex,
         (index) -> new boolean[boardSize][boardSize]);
     if (boardPendingShots[gridY - 1][gridX - 1]) {
       boardPendingShots[gridY - 1][gridX - 1] = false;
-      shotCounter--;
-    } else if (shotCounter < shotLimit) {
+      shotCounter.setValue(count - 1);
+    } else if (count < limit) {
       boardPendingShots[gridY - 1][gridX - 1] = true;
-      shotCounter++;
+      shotCounter.setValue(count +1);
     }
     this.pendingShots.setValue(pendingShots);
   }

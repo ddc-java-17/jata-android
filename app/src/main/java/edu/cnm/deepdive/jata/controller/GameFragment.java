@@ -69,7 +69,19 @@ public class GameFragment extends Fragment {
               (tab, position) -> tab.setText(
                   game.getBoards().get(position).getPlayer().getDisplayName()))
               .attach();
+          if (game.isYourTurn()) {
+            binding.fireButton.setVisibility(View.VISIBLE);
+            binding.shotsRemaining.setVisibility(View.VISIBLE);
+            binding.shotsRemainingLabel.setVisibility(View.VISIBLE);
+          } else {
+            binding.fireButton.setVisibility(View.INVISIBLE);
+            binding.shotsRemaining.setVisibility(View.INVISIBLE);
+            binding.shotsRemainingLabel.setVisibility(View.INVISIBLE);
+          }
         });
+    viewModel.getShotsRemaining()
+        .observe(getViewLifecycleOwner(),
+            (remaining) -> binding.shotsRemaining.setText(String.valueOf(remaining)));
     }
 
   private class BoardChangeListener extends OnPageChangeCallback {

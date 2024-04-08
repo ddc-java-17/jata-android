@@ -67,13 +67,12 @@ public class BoardFragment extends Fragment {
           binding.gameBoard.setBoard(board);
           binding.gameBoard.setClickListener((gridX, gridY, ship) -> Log.d(TAG,
               String.format("clicked: %1$d, %2$d, %3$s", gridX, gridY, ship)));
+          binding.placeShips.setVisibility(View.INVISIBLE);
           if (!board.isPlaced() && board.isMine()) {
             binding.placeShips.setVisibility(View.VISIBLE);
             binding.gameBoard.setLongClickListener(this::handleLongClick);
             binding.placeShips.setOnClickListener((v) -> viewModel.submitShips(boardIndex));
-//          } else if (game.isYourTurn()) {
-          } else {
-            binding.placeShips.setVisibility(View.GONE);
+          } else if (game.isYourTurn()) {
             binding.gameBoard.setClickListener((gridX, gridY, ship) -> {
               viewModel.toggleShots(boardIndex, gridX, gridY);
             });
