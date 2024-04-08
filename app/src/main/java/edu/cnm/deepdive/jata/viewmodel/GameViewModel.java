@@ -15,7 +15,6 @@ import edu.cnm.deepdive.jata.model.Shot;
 import edu.cnm.deepdive.jata.model.entity.User;
 import edu.cnm.deepdive.jata.service.JataRepository;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +40,11 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   private int shotLimit;
   private int shotCounter;
 
+  /**
+   * Constructor for the GameViewModel, implements all private fields.
+   *
+   * @param jataRepository JataRepository
+   */
   @Inject
   public GameViewModel(JataRepository jataRepository) {
     this.jataRepository = jataRepository;
@@ -55,22 +58,46 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     pollThrowable();
   }
 
+  /**
+   * Gets the game object.
+   *
+   * @return game
+   */
   public LiveData<Game> getGame() {
     return game;
   }
 
+  /**
+   * Gets all pending shots.
+   *
+   * @return pendingShots
+   */
   public LiveData<Map<Integer, boolean[][]>> getPendingShots() {
     return pendingShots;
   }
 
+  /**
+   * Gets any throwable needed.
+   *
+   * @return throwable
+   */
   public LiveData<Throwable> getThrowable() {
     return throwable;
   }
 
+  /**
+   * Method used to start a game.
+   *
+   * @param boardSize   int
+   * @param playerCount int
+   */
   public void startGame(int boardSize, int playerCount) {
     jataRepository.startGame(new Game(boardSize, playerCount));
   }
 
+  /**
+   * Sends a poll to check current game for any updates.
+   */
   public void pollGame() {
     gamePoll
         .subscribe(
@@ -87,6 +114,9 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         );
   }
 
+  /**
+   * Sends a poll to check for any throwable messages needed.
+   */
   public void pollThrowable() {
     throwablePoll
         .subscribe(
@@ -98,18 +128,40 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         );
   }
 
+  /**
+   * method used to change the placement of a ship before game has started.
+   *
+   * @param ships      List<Ship>
+   * @param boardIndex int
+   */
   public void changePlacement(List<Ship> ships, int boardIndex) {
     jataRepository.changePlacement(ships, boardIndex);
   }
 
+  /**
+   * Method used to change the placement of a ship before game has started.
+   *
+   * @param ships      List<Ship>
+   * @param boardIndex int
+   * @param ship       Ship
+   */
   public void changePlacement(List<Ship> ships, int boardIndex, Ship ship) {
     jataRepository.changePlacement(ships, boardIndex, ship);
   }
 
+  /**
+   * Method used to submit your ships and lock them in for a game.
+   *
+   * @param boardIndex int
+   */
   public void submitShips(int boardIndex) {
     //noinspection DataFlowIssue
     jataRepository.submitShips(game.getValue().getBoards().get(boardIndex).getShips());
   }
+  /**
+  * Method used to place a shot before firing, on tap it will show a red circle where your shot would
+  * be fired, same spot can be tapped again to remove that shot so it can be placed somewhere else.
+  */
 
   /**
    * @noinspection DataFlowIssue
@@ -128,7 +180,9 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     }
     this.pendingShots.setValue(pendingShots);
   }
-
+  /**
+   * Method used to submit your shots against other users.
+   */
   /**
    * @noinspection DataFlowIssue
    */
