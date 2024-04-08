@@ -20,14 +20,15 @@ import edu.cnm.deepdive.jata.model.Ship;
 import edu.cnm.deepdive.jata.model.Shot;
 
 /**
- * This view class extends the {@View class} and implements OnTouchListener. This classs handles
- * everything that happens on the board. It holds all the drawbales for the board itself, the ships,
+ * This view class extends the View class and implements OnTouchListener. This class handles
+ * everything that happens on the board. It holds all the drawables for the board itself, the ships,
  * and the shots, as well as the methods to draw them on the board.
  */
 public class BoardView extends View implements OnTouchListener {
 
   private static final long LONG_CLICK_DURATION = ViewConfiguration.getLongPressTimeout();
   private static final int MAX_CLICK_RADIUS = 15;
+  public static final int DRAWING_INSET = 20;
 
   private Board board;
   private int size;
@@ -67,6 +68,7 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * A constructor for the BoardView.
+   *
    * @param context Context
    */
   public BoardView(Context context) {
@@ -76,8 +78,9 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * Another constructor, with an extra parameter.
+   *
    * @param context Context.
-   * @param attrs AttributeSet.
+   * @param attrs   AttributeSet.
    */
   public BoardView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
@@ -86,8 +89,9 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * Another constructor, this one implementing more parameters.
-   * @param context Context.
-   * @param attrs AttributeSet.
+   *
+   * @param context      Context.
+   * @param attrs        AttributeSet.
    * @param defStyleAttr int.
    */
   public BoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -97,10 +101,11 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * A fourth constructor, this one with one additional parameter.
-   * @param context Context.
-   * @param attrs AttributeSet.
+   *
+   * @param context      Context.
+   * @param attrs        AttributeSet.
    * @param defStyleAttr int.
-   * @param defStyleRes int.
+   * @param defStyleRes  int.
    */
   public BoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -139,7 +144,8 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   /**
-   * Sets the board after an update occurs.
+   * Sets the board for a game.
+   *
    * @param board Board.
    */
   public void setBoard(Board board) {
@@ -149,6 +155,7 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * Sets the boardSize.
+   *
    * @param size int.
    */
   public void setSize(int size) {
@@ -158,6 +165,7 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * Sets the shots on a board.
+   *
    * @param shots boolean[][]
    */
   public void setShots(boolean[][] shots) {
@@ -177,6 +185,7 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * Sets the long click listener used to get the pop-up menu for moving ships.
+   *
    * @param longClickListener onLongClickListener.
    */
   public void setLongClickListener(
@@ -186,6 +195,7 @@ public class BoardView extends View implements OnTouchListener {
 
   /**
    * Sets the click listener used to place and toggle shots.
+   *
    * @param clickListener OnClickListener.
    */
   public void setClickListener(OnClickListener clickListener) {
@@ -203,16 +213,15 @@ public class BoardView extends View implements OnTouchListener {
       canvas.drawLine(0, lineIndex * cellHeight, width, lineIndex * cellHeight, gridPaint);
       canvas.drawLine(lineIndex * cellWidth, 0, lineIndex * cellWidth, height, gridPaint);
     }
-    // TODO: 4/3/2024 draw using canvas.drawlines
   }
 
   private void drawShips(Canvas canvas) {
     // TODO: 4/3/2024 invoke drawable.draw (canvas)  to draw ships on canvas.
     for (Ship ship : board.getShips()) {
       int x = ship.getX();
-      float left = (x - 1) * cellWidth + 20;
+      float left = (x - 1) * cellWidth;
       int y = ship.getY();
-      float top = (y - 1) * cellHeight + 20;
+      float top = (y - 1) * cellHeight;
       float right;
       float bottom;
       boolean vertical = ship.isVertical();
@@ -224,31 +233,37 @@ public class BoardView extends View implements OnTouchListener {
         right = (x - 1 + length) * cellWidth;
         bottom = y * cellHeight;
       }
-      right -= 20;
-      bottom -= 20;
-      canvas.drawRoundRect(left, top, right, bottom, 20, 20, shipPaint);
-      if (ship.isSelected()) {
-        canvas.drawRoundRect(left, top, right, bottom, 20, 20, selectedShipPaint);
-      }
+//      right -= 20;
+//      bottom -= 20;
+//      canvas.drawRoundRect(left + DRAWING_INSET, top + DRAWING_INSET, right - DRAWING_INSET, bottom - DRAWING_INSET, DRAWING_INSET, DRAWING_INSET, shipPaint);
+//      if (ship.isSelected()) {
+//        canvas.drawRoundRect(left + DRAWING_INSET, top + DRAWING_INSET, right - DRAWING_INSET, bottom - DRAWING_INSET, DRAWING_INSET, DRAWING_INSET, selectedShipPaint);
+//      }
       // TODO: 4/3/2024 use the ships x and y coords and orientation to select drawable to set bounds
-//    largeShip.setBounds((int) ((x - 1) * cellWidth), (int) ((y -1) * cellHeight),
-//        (int) ((x - 1 + length) * cellWidth), (int) cellHeight);
-//    largeShip.draw(canvas);
+      Drawable shipDrawable = switch (ship.getLength()) {
+        case 2 -> smallShip;
+        case 3 -> mediumShip;
+        case 4 -> largeShip;
+        default -> null;
+      };
+      //noinspection DataFlowIssue
+      shipDrawable.setBounds((int) left + DRAWING_INSET, (int) top + DRAWING_INSET, (int) right - DRAWING_INSET, (int) bottom - DRAWING_INSET);
+      shipDrawable.draw(canvas);
     }
 
   }
 
   private void drawShots(Canvas canvas) {
-    // TODO: 4/3/2024 use drawable.draw (canvas) to draw each shot on the canvas.
     for (Shot shot : board.getShots()) {
-      if (shot.isHit()) {
-       hit.draw(canvas);
-      }
-      if (!shot.isHit()) {
-        miss.draw(canvas);
-      }
-      // TODO: 4/3/2024 use shot x and y coords and isHit method to pick a drawable and set its bounds.
-      // TODO: 4/3/2024 invoke draw method on drawable
+      int x = shot.getX();
+      float left = (x - 1) * cellWidth;
+      int y = shot.getY();
+      float top = (y - 1) * cellHeight;
+      float right = left + cellWidth;
+      float bottom = top + cellHeight;
+      Drawable shotDrawable = shot.isHit() ? hit : miss;
+      shotDrawable.setBounds((int) left + DRAWING_INSET,(int) top + DRAWING_INSET,(int) right - DRAWING_INSET,(int) bottom - DRAWING_INSET);
+     shotDrawable.draw(canvas);
     }
   }
 
@@ -267,9 +282,9 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   private void loadResources(Context context) {
-    smallShip = AppCompatResources.getDrawable(context, R.drawable.small);
-    mediumShip = AppCompatResources.getDrawable(context, R.drawable.medium);
-    largeShip = AppCompatResources.getDrawable(context, R.drawable.large);
+    smallShip = AppCompatResources.getDrawable(context, R.drawable.canoe);
+    mediumShip = AppCompatResources.getDrawable(context, R.drawable.galley);
+    largeShip = AppCompatResources.getDrawable(context, R.drawable.trireme);
     hit = AppCompatResources.getDrawable(context, R.drawable.hit);
     miss = AppCompatResources.getDrawable(context, R.drawable.miss);
   }
@@ -298,14 +313,14 @@ public class BoardView extends View implements OnTouchListener {
       long duration = event.getEventTime() - downTime;
       int gridX = (int) (downX / cellWidth) + 1;
       int gridY = (int) (downY / cellHeight) + 1;
-        Ship ship = shipAt(gridX, gridY);
-        if (duration < LONG_CLICK_DURATION) {
-          if (clickListener != null) {
-            clickListener.onClick(gridX, gridY, ship);
-          }
-        } else if (longClickListener != null && ship != null) {
-          longClickListener.onLongClick(gridX, gridY, event.getX(), event.getY(), ship);
+      Ship ship = shipAt(gridX, gridY);
+      if (duration < LONG_CLICK_DURATION) {
+        if (clickListener != null) {
+          clickListener.onClick(gridX, gridY, ship);
         }
+      } else if (longClickListener != null && ship != null) {
+        longClickListener.onLongClick(gridX, gridY, event.getX(), event.getY(), ship);
+      }
 
       handled = true;
     }
@@ -313,16 +328,19 @@ public class BoardView extends View implements OnTouchListener {
   }
 
   /**
-   * A nested Interface used to set the click listener.
+   * A nested Interface used to set the click listener for toggling shot placement.
    */
   public interface OnClickListener {
+
     void onClick(int gridX, int gridY, Ship ship);
   }
 
   /**
-   * A nested interface used to set the long click listener.
+   * A nested interface used to set the long click listener used to invoke pop-up menu used to move
+   * ships during ship placement.
    */
   public interface OnLongClickListener {
+
     void onLongClick(int gridX, int gridY, float viewX, float viewY, Ship ship);
   }
 }
