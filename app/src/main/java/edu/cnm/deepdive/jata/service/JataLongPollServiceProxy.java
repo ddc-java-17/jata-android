@@ -14,14 +14,6 @@ import retrofit2.http.Path;
  */
 public interface JataLongPollServiceProxy {
 
-  /**
-   * Sends an HTTP {@link GET} request to the server for a particular {@link Game} object.
-   *
-   * @param key         This is the unique key for the {@code game}.
-   * @param bearerToken This is a randomly generated authentication token we use to confirm that the
-   *                    user is who they say they are.
-   * @return Reactive stream of the single updated {@link Game} object that the server sends back.
-   */
   @GET("games/{key}")
   Single<Game> getGame(
       @Path("key") String key,
