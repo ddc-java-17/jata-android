@@ -43,10 +43,6 @@ public class UserRepository {
   private final UserDao userDao;
   private final GoogleSignInService signInService;
 
-  /**
-   * Initializes this instance by establishing a logical connection to the underlying database.
-   */
-
   @Inject
   UserRepository(UserDao userDao, GoogleSignInService signInService) {
     this.userDao = userDao;

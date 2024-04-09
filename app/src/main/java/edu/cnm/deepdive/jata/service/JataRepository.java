@@ -18,8 +18,8 @@ import retrofit2.http.PUT;
 
 /**
  * Links the {@link ViewModel} and the {@link JataServiceProxy} that talks to the server. Its
- * methods are invoked by the view model, then they invoke code that sends the relevant Json
- * packet to the server.
+ * methods are invoked by the view model, then they invoke code that sends the relevant Json packet
+ * to the server.
  */
 public class JataRepository {
 
@@ -67,34 +67,12 @@ public class JataRepository {
             this::updateThrowable,
             pending
         );
-//    int[] origin = {1, 1};
-//    List<Ship> ships = Stream.generate(() -> {
-//          int x = origin[0];
-//          int y = origin[1];
-//          boolean vertical = (x < y);
-//          int length = 3;
-//          if (vertical) {
-//            origin[0]++;
-//          } else {
-//            origin[1]++;
-//          }
-//          return new Ship(x, y, length, vertical);
-//        })
-//        .limit(4)
-//        .collect(Collectors.toList());
-//    User user = new User();
-//    user.setDisplayName("ducky");
-//    user.setKey(""); // FIXME: 4/6/2024 use the current users key
-//    Board board = new Board(user, List.of(), ships, false, false);
-//    this.game = new Game(null, game.getBoardSize(), game.getPlayerCount(), List.of(board), false,
-//        false, false);
-//    updateGame(this.game);
   }
 
   /**
    * Authenticates a user, invokes the {@link JataServiceProxy#submitShips(String, List, String)}
-   * method to send an HTTP request to the server, and then listens for the long poll
-   * responses from the server, and then processes the response from the server.
+   * method to send an HTTP request to the server, and then listens for the long poll responses from
+   * the server, and then processes the response from the server.
    *
    * @param ships {@link List} of {@link Ship} objects that will be sent to the server.
    */
@@ -112,10 +90,10 @@ public class JataRepository {
 
   /**
    * Authenticates a user, invokes {@link JataServiceProxy#submitShots(String, List, String)} to
-   * send an HTTP request to the server, listens for the long poll responses from the server,
-   * and then processes the response from the server.
+   * send an HTTP request to the server, listens for the long poll responses from the server, and
+   * then processes the response from the server.
    *
-   * @param shots
+   * @param shots {@link List} of {@link Shot} object(s) that is being sent to the server.
    */
   public void submitShots(List<Shot> shots) {
     signInService
@@ -140,15 +118,12 @@ public class JataRepository {
       gamePoller.onComplete();
     }
     gamePoller = BehaviorSubject.create();
+    //noinspection ResultOfMethodCallIgnored
     return gamePoller
         .subscribeOn(scheduler)
         .flatMapSingle((game) -> userRepository.getCurrent()
-                .doOnSuccess((user) -> game.getBoards().forEach((board) ->
-//                    board.setMine(true))) // FIXME: 4/6/2024
-//            board.setMine(user.getKey().equals(board.getPlayer().getKey()))
-                        board.isMine()
-                ))
-                .map((user) -> game)
+            .doOnSuccess((user) -> game.getBoards().forEach(Board::isMine))
+            .map((user) -> game)
         )
         .doOnNext((game) -> {
           if (game.isStarted() && !game.isFinished() && !game.isYourTurn()) {
@@ -180,9 +155,13 @@ public class JataRepository {
   }
 
   /**
+   * Check the validity or placement of a ship, and updates the {@link List} of {@link Ship} objects
+   * if the placement is valid or throws an exception and reverts the {@link List} of {@link Ship}
+   * to its last valid formation.
    *
-   * @param ships
-   * @param boardIndex
+   * @param ships @link List} of {@link Ship} that was last validated successfully.
+   * @param boardIndex The board position in every {@link Game} object's {@link List} of
+   * {@link Board}
    */
   public void changePlacement(List<Ship> ships, int boardIndex) {
     if (isPlacementValid(ships)) {
@@ -195,6 +174,16 @@ public class JataRepository {
     gamePoller.onNext(game);
   }
 
+  /**
+   * Checks the validity of the placement of the move or rotation of a ship, and rotates the ship 90
+   * degrees if the move or rotation and invokes {@link JataRepository#changePlacement(List, int)}
+   * to validate again if the rotation would not end in a valid move.
+   *
+   * @param ships      {@link List} of {@link Ship} that was last validated successfully.
+   * @param boardIndex The board position in every {@link Game} object's {@link List} of
+   * {@link Board}
+   * @param ship The {@link Ship} object that was moved or rotated by the user.
+   */
   public void changePlacement(List<Ship> ships, int boardIndex, Ship ship) {
     if (isPlacementValid(ships)) {
       List<Ship> boardShips = game.getBoards().get(boardIndex).getShips();
@@ -247,13 +236,6 @@ public class JataRepository {
     return valid;
   }
 
-  /**
-   * Authenticates the user, invokes {@link JataLongPollServiceProxy#getGame(String, String)} to
-   * send an HTTP request to the server, listens for the response from the server, and then
-   * processes the response from the server.
-   *
-   * @param key Unique identifying key for the {@link Game} object.
-   */
   private void getGame(String key) {
     signInService
         .refreshBearerToken()
@@ -267,40 +249,25 @@ public class JataRepository {
         );
   }
 
-  /**
-   * Updates the {@link Game} object when the server responds to the long poll.
-   *
-   * @param game {@link Game} object from the server.
-   */
   private void updateGame(Game game) {
     if (gamePoller != null) {
       gamePoller.onNext(game);
     }
   }
 
-  /**
-   * Handles exceptions and errors the server may throw in response to the long poll.
-   *
-   * @param throwable Exception or error from the server.
-   */
   private void updateThrowable(Throwable throwable) {
     if (throwablePoller != null) {
       throwablePoller.onNext(throwable);
     }
   }
 
-  /**
-   * Sets the {@link Game} object.
-   *
-   * @param game
-   */
   private void setGame(Game game) {
     this.game = game;
   }
 
   /**
    * Defines custom exception thrown by {@link JataRepository#changePlacement(List, int)} when a
-   * user puts their ship in an invalid position.
+   * user moves or rotates their ship into an invalid position.
    */
   public static class InvalidShipPlacementException extends IllegalArgumentException {
 

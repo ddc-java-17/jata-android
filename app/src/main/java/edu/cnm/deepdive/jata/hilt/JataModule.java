@@ -22,6 +22,10 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Provides Hilt with proxies and annotations giving Hilt information about how they need to be
+ * built.
+ */
 @Module
 @InstallIn(SingletonComponent.class)
 public final class JataModule {
@@ -29,6 +33,12 @@ public final class JataModule {
   JataModule() {
   }
 
+  /**
+   * Creates a single instance of {@link JataServiceProxy}.
+   *
+   * @param context Global information across the application.
+   * @return {@link JataServiceProxy} instance.
+   */
   @Provides
   @Singleton
   public JataServiceProxy provideProxy(@ApplicationContext Context context) {
@@ -50,12 +60,10 @@ public final class JataModule {
   }
 
   /**
-   * This method is a {@link Singleton} that polls the server at regular intervals asking for
-   * updates to the {@link Game}. This allows all players to receive live updates when shots are
-   * fired and when it is the next player's turn.
+   * Creates a single instance of {@link JataLongPollServiceProxy} and sets a request timeout.
    *
-   * @param context
-   * @return
+   * @param context The global information about the application environment
+   * @return {@link JataLongPollServiceProxy} instance.
    */
   @Provides
   @Singleton
