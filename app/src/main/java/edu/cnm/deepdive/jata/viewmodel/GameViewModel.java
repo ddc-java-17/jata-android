@@ -27,6 +27,10 @@ import java.util.stream.IntStream;
 import javax.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This GameViewModel provides access (for a UI controller) to the current state of a game and updates
+ * player boards as a game goes on.
+ */
 @HiltViewModel
 public class GameViewModel extends ViewModel implements DefaultLifecycleObserver {
 
@@ -91,14 +95,26 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     return pendingShots;
   }
 
+  /**
+   * Gets the shot limit for a users turn.
+   * @return shotLimit
+   */
   public LiveData<Integer> getShotLimit() {
     return shotLimit;
   }
 
+  /**
+   * Gets the shots counter for a users turn.
+   * @return shotCounter
+   */
   public LiveData<Integer> getShotCounter() {
     return shotCounter;
   }
 
+  /**
+   * Gets the shots a user has remaining on their turn.
+   * @return shotsRemaining.
+   */
   public LiveData<Integer> getShotsRemaining() {
     return shotsRemaining;
   }
