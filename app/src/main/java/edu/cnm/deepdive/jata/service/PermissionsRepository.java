@@ -63,6 +63,13 @@ public class PermissionsRepository {
     return permissions;
   }
 
+  /**
+   * Checks the state of permissions required for the app.
+   *
+   * @param activity Permissions activity.
+   * @param permissionsToRequest Permissions required for the app.
+   * @param permissionsToExplain Explanation of the permissions.
+   */
   public void checkPermissions(
       Activity activity, Set<String> permissionsToRequest, Set<String> permissionsToExplain) {
     try {

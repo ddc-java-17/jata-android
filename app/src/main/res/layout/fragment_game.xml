@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:paddingBottom="@dimen/half_dynamic_spacing"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <com.google.android.material.tabs.TabLayout
+    android:id="@+id/player_boards"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+  <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/player_boards_host"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    app:layout_constraintTop_toBottomOf="@id/player_boards"
+    app:layout_constraintBottom_toTopOf="@id/shots_remaining_label"/>
+
+  <TextView
+    android:id="@+id/shots_remaining_label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/shots_remaining"
+    app:layout_constraintBottom_toTopOf="@id/fire_button"
+    app:layout_constraintHorizontal_chainStyle="packed"
+    android:text="@string/shots_remaining"
+    android:layout_margin="@dimen/half_static_spacing"/>
+
+  <TextView
+    android:id="@+id/shots_remaining"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/half_static_spacing"
+    android:visibility="invisible"
+    app:layout_constraintStart_toEndOf="@id/shots_remaining_label"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBaseline_toBaselineOf="@id/shots_remaining_label"
+    tools:text="2"/>
+
+  <Button
+    android:id="@+id/fire_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:text="@string/fire_shots"
+    android:layout_margin="@dimen/half_dynamic_spacing"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

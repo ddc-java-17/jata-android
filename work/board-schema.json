@@ -1,0 +1,13 @@
+{
+    "placed": {boolean},
+    "fleetSunk": {boolean},
+    "user": {user schema},
+    "shots": [
+        {shot schema},
+        ...
+    ],
+    "ships": [
+        {ships schema },
+        ...
+    ]
+}

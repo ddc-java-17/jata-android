@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import com.google.gson.annotations.Expose;
 import java.time.Instant;
 
 /**
@@ -41,6 +42,9 @@ public class User {
   @ColumnInfo(name = "user_id")
   private long id;
 
+  @Expose
+  private String key;
+
   @NonNull
   private Instant created = Instant.MIN;
 
@@ -50,9 +54,8 @@ public class User {
 
   @ColumnInfo(name = "display_name", collate = ColumnInfo.NOCASE)
   @NonNull
+  @Expose
   private String displayName = "";
-
-  // TODO Define additional fields as appropriate.
 
   /**
    * Returns the auto-generated unique identifier of this instance.
@@ -69,6 +72,22 @@ public class User {
   @SuppressWarnings("JavadocDeclaration")
   public void setId(long id) {
     this.id = id;
+  }
+
+  /**
+   * Returns the unique key of this instance. This key is what we will send to and from the server.
+   */
+  public String getKey() {
+    return key;
+  }
+
+  /**
+   * Sets the unique key of this instance. This key is what we will send to and from the server.
+   *
+   * @param key
+   */
+  public void setKey(String key) {
+    this.key = key;
   }
 
   /**
@@ -125,9 +144,6 @@ public class User {
     this.displayName = displayName;
   }
 
-  // TODO Define additional getters and setters. These must be defined for any additional fields
-  //  mapped to database columns.
-
   /**
    * Computes and returns the {@code int}-valued hash code of this instance. Currently, this
    * computation is based only on the primary key value.
@@ -153,9 +169,13 @@ public class User {
     boolean matched;
     if (obj == this) {
       matched = true;
-    } else if (obj instanceof User) {
-      User other = (User) obj;
-      matched = (id != 0 && other.id != 0 && id == other.id);
+    } else if (obj instanceof User other) {
+      if (id != 0 && other.id != 0 && id == other.id) {
+        matched = true;
+      } else {
+        matched = (oauthKey.equals(other.oauthKey));
+      }
+
     } else {
       matched = false;
     }
@@ -163,3 +183,5 @@ public class User {
   }
 
 }
+
+// Everyone asks what is the user, but no one asks HOW is the user...

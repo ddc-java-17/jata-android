@@ -1,0 +1,6 @@
+{
+    "x": {int},
+    "y": {int},
+    "length": {int},
+    "vertical": {boolean}
+}
